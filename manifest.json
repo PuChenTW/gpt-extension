@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "GPT-Extension",
+    "version": "1.0",
+    "description": "Grammer check extension using chatGPT API",
+    "content_scripts": [
+        {
+            "js": ["scripts/content.js"],
+            "css": ["scripts/content.css"],
+            "matches": ["<all_urls>"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [ "scripts/completions.js", "scripts/translate.js" ],
+            "matches": ["<all_urls>"]
+        }
+    ],
+    "permissions": [
+        "storage",
+        "tabs"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "options_page": "options/options.html"
+}
