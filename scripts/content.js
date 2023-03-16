@@ -235,7 +235,7 @@ function showIcon(e) {
         !document.getElementById(iconId) &&
         !document.getElementById(dialogId) &&
         text.length > 0 &&
-        text.length < 250
+        text.length < 300
     ) {
         const range = selection.getRangeAt(0);
         const dialogTop = `${range.getBoundingClientRect().bottom + window.scrollY + 5
