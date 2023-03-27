@@ -3,6 +3,7 @@ var googleTranslate = null;
 var definition = null;
 var translateIcon = null;
 var checkIcon = null;
+var progressSpinIcon = null;
 
 // Use dynamic import to import modules.
 // https://stackoverflow.com/questions/48104433/how-to-import-es6-modules-in-content-script-for-chrome-extension
@@ -15,6 +16,7 @@ var checkIcon = null;
     const icons = await import(chrome.runtime.getURL("scripts/icons.js"));
     translateIcon = icons.translateIcon;
     checkIcon = icons.checkIcon;
+    progressSpinIcon = icons.progressSpinIcon;
 })();
 
 const dialogId = "gpt-ex-dialog";
@@ -60,44 +62,10 @@ function createDialog(selectText, dialogTop, dialogLeft) {
     spin.classList.add("cs-items-center", "cs-justify-center", "cs-p-4x");
     spin.style.display = "none";
 
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("fill", "none");
-    svg.classList.add(
-        "cs-animate-spin",
-        "cs--ml-1",
-        "cs-mr-3",
-        "cs-h-5",
-        "cs-w-5",
-        "cs-text-black"
-    );
-
-    const circle = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "circle"
-    );
-    circle.classList.add("cs-opacity-25");
-    circle.setAttribute("cx", "12");
-    circle.setAttribute("cy", "12");
-    circle.setAttribute("r", "10");
-    circle.setAttribute("stroke", "currentColor");
-    circle.setAttribute("stroke-width", "4");
-
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.classList.add("cs-opacity-75");
-    path.setAttribute("fill", "currentColor");
-    path.setAttribute(
-        "d",
-        "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-    );
-
     const innerText = document.createElement("div");
     innerText.innerText = "Processing...";
 
-    svg.appendChild(circle);
-    svg.appendChild(path);
-
-    spin.append(svg);
+    spin.append(progressSpinIcon);
     spin.appendChild(innerText);
 
     const grammerCheckButton = document.createElement("button");
@@ -110,9 +78,6 @@ function createDialog(selectText, dialogTop, dialogLeft) {
         "cs-border",
         "cs-border-solid",
         "cs-border-slate-700",
-        "cs-text-white",
-        "cs-font-sans",
-        "cs-text-14x",
         "cs-cursor-pointer"
     );
     grammerCheckButton.appendChild(checkIcon);
@@ -139,9 +104,6 @@ function createDialog(selectText, dialogTop, dialogLeft) {
         "cs-border",
         "cs-border-solid",
         "cs-border-slate-700",
-        "cs-text-white",
-        "cs-font-sans",
-        "cs-text-14x",
         "cs-cursor-pointer"
     );
     translateButton.appendChild(translateIcon)
