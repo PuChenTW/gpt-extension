@@ -34,19 +34,19 @@ function createDialog(selectText, dialogTop, dialogLeft) {
     const dialog = document.createElement("div");
     dialog.id = dialogId;
     dialog.classList.add(
-        "p-4x",
-        "max-w-sm",
-        "bg-white",
-        "rounded",
-        "shadow-lg",
-        "font-sans",
-        "text-14x",
-        "flex",
-        "items-center",
-        "absolute",
-        "border",
-        "border-solid",
-        "text-slate-800"
+        "cs-p-4x",
+        "cs-max-w-sm",
+        "cs-bg-white",
+        "cs-rounded",
+        "cs-shadow-lg",
+        "cs-font-sans",
+        "cs-text-14x",
+        "cs-flex",
+        "cs-items-center",
+        "cs-absolute",
+        "cs-border",
+        "cs-border-solid",
+        "cs-text-slate-800"
     );
     dialog.style.zIndex = Number.MAX_SAFE_INTEGER;
     dialog.style.top = dialogTop;
@@ -55,26 +55,26 @@ function createDialog(selectText, dialogTop, dialogLeft) {
 
     const spin = document.createElement("div");
     spin.id = progressSpinId;
-    spin.classList.add("items-center", "justify-center", "p-4x");
+    spin.classList.add("cs-items-center", "cs-justify-center", "cs-p-4x");
     spin.style.display = "none";
 
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 24 24");
     svg.setAttribute("fill", "none");
     svg.classList.add(
-        "animate-spin",
-        "-ml-1",
-        "mr-3",
-        "h-5",
-        "w-5",
-        "text-black"
+        "cs-animate-spin",
+        "cs--ml-1",
+        "cs-mr-3",
+        "cs-h-5",
+        "cs-w-5",
+        "cs-text-black"
     );
 
     const circle = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "circle"
     );
-    circle.classList.add("opacity-25");
+    circle.classList.add("cs-opacity-25");
     circle.setAttribute("cx", "12");
     circle.setAttribute("cy", "12");
     circle.setAttribute("r", "10");
@@ -82,7 +82,7 @@ function createDialog(selectText, dialogTop, dialogLeft) {
     circle.setAttribute("stroke-width", "4");
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.classList.add("opacity-75");
+    path.classList.add("cs-opacity-75");
     path.setAttribute("fill", "currentColor");
     path.setAttribute(
         "d",
@@ -100,18 +100,18 @@ function createDialog(selectText, dialogTop, dialogLeft) {
 
     const grammerCheckButton = document.createElement("button");
     grammerCheckButton.classList.add(
-        "p-4x",
-        "mx-2x",
-        "bg-lime-500",
-        "rounded-md",
-        "shadow-lg",
-        "border",
-        "border-solid",
-        "border-slate-700",
-        "text-white",
-        "font-sans",
-        "text-14x",
-        "cursor-pointer"
+        "cs-p-4x",
+        "cs-mx-2x",
+        "cs-bg-lime-500",
+        "cs-rounded-md",
+        "cs-shadow-lg",
+        "cs-border",
+        "cs-border-solid",
+        "cs-border-slate-700",
+        "cs-text-white",
+        "cs-font-sans",
+        "cs-text-14x",
+        "cs-cursor-pointer"
     );
     grammerCheckButton.innerText = "Grammer";
     grammerCheckButton.style.borderColor = "#BBBBBB";
@@ -127,18 +127,18 @@ function createDialog(selectText, dialogTop, dialogLeft) {
 
     const translateButton = document.createElement("button");
     translateButton.classList.add(
-        "p-4x",
-        "mx-2x",
-        "bg-cyan-500",
-        "rounded-md",
-        "shadow-lg",
-        "border",
-        "border-solid",
-        "border-slate-700",
-        "text-white",
-        "font-sans",
-        "text-14x",
-        "cursor-pointer"
+        "cs-p-4x",
+        "cs-mx-2x",
+        "cs-bg-cyan-500",
+        "cs-rounded-md",
+        "cs-shadow-lg",
+        "cs-border",
+        "cs-border-solid",
+        "cs-border-slate-700",
+        "cs-text-white",
+        "cs-font-sans",
+        "cs-text-14x",
+        "cs-cursor-pointer"
     );
     translateButton.innerText = "Translate";
     translateButton.style.borderColor = "#BBBBBB";
@@ -168,15 +168,15 @@ function createIcon(top, left, dialogTop, dialogLeft, selectText) {
     const container = document.createElement("div");
     container.id = iconId;
     container.classList.add(
-        "absolute",
-        "bg-white",
-        "shadow-lg",
-        "rounded-md",
-        "text-center",
-        "border",
-        "border-solid",
-        "cursor-pointer",
-        "text-sky-400"
+        "cs-absolute",
+        "cs-bg-white",
+        "cs-shadow-lg",
+        "cs-rounded-md",
+        "cs-text-center",
+        "cs-border",
+        "cs-border-solid",
+        "cs-cursor-pointer",
+        "cs-text-sky-400"
     );
     container.style.width = "22px";
     container.style.height = "23px";
@@ -188,7 +188,7 @@ function createIcon(top, left, dialogTop, dialogLeft, selectText) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 20 20");
     svg.setAttribute("fill", "currentColor");
-    svg.classList.add("h-full", "w-full", "text-sky-400");
+    svg.classList.add("cs-h-full", "cs-w-full", "cs-text-sky-400", "cs-block");
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("fill-rule", "evenodd");
     path.setAttribute(
