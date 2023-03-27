@@ -18,7 +18,11 @@
     ],
     "web_accessible_resources": [
         {
-            "resources": [ "scripts/completions.js", "scripts/translate.js" ],
+            "resources": [ 
+                "scripts/completions.js",
+                "scripts/translate.js",
+                "scripts/icons.js"
+            ],
             "matches": ["<all_urls>"]
         }
     ],

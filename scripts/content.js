@@ -1,20 +1,22 @@
 var grammerCheck = null;
 var googleTranslate = null;
 var definition = null;
+var translateIcon = null;
+var checkIcon = null;
 
 // Use dynamic import to import modules.
 // https://stackoverflow.com/questions/48104433/how-to-import-es6-modules-in-content-script-for-chrome-extension
 (async () => {
-    const completions = await import(
-        chrome.runtime.getURL("scripts/completions.js")
-    );
+    const completions = await import(chrome.runtime.getURL("scripts/completions.js"));
     grammerCheck = completions.grammerCheckbyChatGPT;
     definitionbyChatGPT = completions.definitionbyChatGPT;
     const translate = await import(chrome.runtime.getURL("scripts/translate.js"));
     googleTranslate = translate.googleTranslate;
+    const icons = await import(chrome.runtime.getURL("scripts/icons.js"));
+    translateIcon = icons.translateIcon;
+    checkIcon = icons.checkIcon;
 })();
 
-const iconId = "gpt-ex-icon";
 const dialogId = "gpt-ex-dialog";
 const progressSpinId = "gpt-ex-spin";
 
@@ -113,8 +115,10 @@ function createDialog(selectText, dialogTop, dialogLeft) {
         "cs-text-14x",
         "cs-cursor-pointer"
     );
-    grammerCheckButton.innerText = "Grammer";
+    grammerCheckButton.appendChild(checkIcon);
     grammerCheckButton.style.borderColor = "#BBBBBB";
+    grammerCheckButton.style.width = "22px";
+    grammerCheckButton.style.height = "23px";
 
     grammerCheckButton.addEventListener("mouseup", (e) => {
         e.preventDefault();
@@ -140,8 +144,10 @@ function createDialog(selectText, dialogTop, dialogLeft) {
         "cs-text-14x",
         "cs-cursor-pointer"
     );
-    translateButton.innerText = "Translate";
+    translateButton.appendChild(translateIcon)
     translateButton.style.borderColor = "#BBBBBB";
+    translateButton.style.width = "22px";
+    translateButton.style.height = "23px";
 
     translateButton.addEventListener("mouseup", (e) => {
         e.preventDefault();
@@ -164,63 +170,6 @@ function createDialog(selectText, dialogTop, dialogLeft) {
     return dialog;
 }
 
-function createIcon(top, left, dialogTop, dialogLeft, selectText) {
-    const container = document.createElement("div");
-    container.id = iconId;
-    container.classList.add(
-        "cs-absolute",
-        "cs-bg-white",
-        "cs-shadow-lg",
-        "cs-rounded-md",
-        "cs-text-center",
-        "cs-border",
-        "cs-border-solid",
-        "cs-cursor-pointer",
-        "cs-text-sky-400"
-    );
-    container.style.width = "22px";
-    container.style.height = "23px";
-    container.style.top = `${top + window.scrollY + 5}px`;
-    container.style.left = `${left + window.scrollX + 5}px`;
-    container.style.zIndex = Number.MAX_SAFE_INTEGER;
-    container.style.borderColor = "#BBBBBB";
-
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("viewBox", "0 0 20 20");
-    svg.setAttribute("fill", "currentColor");
-    svg.classList.add("cs-h-full", "cs-w-full", "cs-text-sky-400", "cs-block");
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("fill-rule", "evenodd");
-    path.setAttribute(
-        "d",
-        "M10 3c-4.31 0-8 3.033-8 7 0 2.024.978 3.825 2.499 5.085a3.478 3.478 0 01-.522 1.756.75.75 0 00.584 1.143 5.976 5.976 0 003.936-1.108c.487.082.99.124 1.503.124 4.31 0 8-3.033 8-7s-3.69-7-8-7zm0 8a1 1 0 100-2 1 1 0 000 2zm-2-1a1 1 0 11-2 0 1 1 0 012 0zm5 1a1 1 0 100-2 1 1 0 000 2z"
-    );
-    path.setAttribute("clip-rule", "evenodd");
-    svg.appendChild(path);
-
-    container.addEventListener("mousedown", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-    });
-
-    container.addEventListener("mouseup", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        createDialog(selectText, dialogTop, dialogLeft);
-        removeIcon();
-    });
-    container.appendChild(svg);
-    document.body.appendChild(container);
-    return container;
-}
-
-function removeIcon() {
-    const icon = document.getElementById(iconId);
-    if (icon) {
-        document.body.removeChild(icon);
-    }
-}
-
 function removeDialog() {
     const dialog = document.getElementById(dialogId);
     if (dialog) {
@@ -228,11 +177,10 @@ function removeDialog() {
     }
 }
 
-function showIcon(e) {
+function onMouseup(e) {
     const selection = window.getSelection();
     const text = selection.toString().trim();
     if (
-        !document.getElementById(iconId) &&
         !document.getElementById(dialogId) &&
         text.length > 0 &&
         text.length < 300
@@ -242,7 +190,7 @@ function showIcon(e) {
             }px`;
         const dialogLeft = `${range.getBoundingClientRect().left + window.scrollX
             }px`;
-        createIcon(e.clientY, e.clientX, dialogTop, dialogLeft, text);
+        createDialog(text, dialogTop, dialogLeft);
     }
 }
 
@@ -258,27 +206,12 @@ function clickInDialog(e) {
     );
 }
 
-function clickInIcon(e) {
-    const rect = document.getElementById(iconId)?.getBoundingClientRect();
-    if (!rect) return false;
-
-    return (
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom
-    );
-}
-
 document.addEventListener("mouseup", (e) => {
-    showIcon(e);
+    onMouseup(e);
 });
 
 document.addEventListener("mousedown", (e) => {
     if (!clickInDialog(e)) {
         removeDialog();
-    }
-    if (!clickInIcon(e)) {
-        removeIcon();
     }
 });
