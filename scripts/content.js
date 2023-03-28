@@ -24,7 +24,6 @@ const progressSpinId = "gpt-ex-spin";
 const btnClass = [
     "cs-p-4x",
     "cs-mx-2x",
-    "cs-bg-lime-500",
     "cs-rounded-md",
     "cs-shadow-lg",
     "cs-border",
@@ -89,14 +88,14 @@ function createDialog(selectText, dialogTop, dialogLeft) {
     spin.appendChild(innerText);
 
     const grammerCheckButton = document.createElement("button");
-    grammerCheckButton.classList.add(...btnClass);
+    grammerCheckButton.classList.add(...btnClass, "cs-bg-lime-500");
     grammerCheckButton.appendChild(checkIcon);
     grammerCheckButton.style.borderColor = "#BBBBBB";
     grammerCheckButton.style.width = "22px";
     grammerCheckButton.style.height = "23px";
 
     const translateButton = document.createElement("button");
-    translateButton.classList.add(...btnClass);
+    translateButton.classList.add(...btnClass, "cs-bg-cyan-500");
     translateButton.appendChild(translateIcon);
     translateButton.style.borderColor = "#BBBBBB";
     translateButton.style.width = "22px";
