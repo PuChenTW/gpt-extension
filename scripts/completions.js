@@ -31,7 +31,7 @@ export function grammerCheckbyChatGPT(text, callback) {
                 {
                     role: "system",
                     content:
-                        "You are a grammar checker. If the sentences have some error, give the user the correct sentences directly. Otherwise, just tell the user the grammar of the sentences is correct.",
+                        "You are a grammar checker. If the sentences have some errors, give the user the correct sentences and suggestions.",
                 },
                 { role: "user", content: `"${text}"` },
             ],
