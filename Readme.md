@@ -25,13 +25,12 @@ To install the extension, follow these steps:
 The extension should now be installed and ready to use.
 
 ### Usage
-To use the extension, simply select the text you wish to check on any website. A little icon will appear next to the selected text. Click on the icon to open a dialog with two buttons: "Grammar" and "Translate".
+https://user-images.githubusercontent.com/11731323/228188383-1984f978-ce73-4bbb-8229-34fb730cd7f1.mov
 
-Clicking on "Grammar" will send the selected text to the OpenAI API to check for grammar errors. The corrected sentence and suggestions will be displayed in the dialog.
 
-Clicking on "Translate" will send the selected text to the Google Translate API and display the translated text in the dialog.
 
-To set your OpenAI API key, go to the extension's option page and enter your key in the designated field.
+### Settings
+To set your OpenAI API key, go to the extension's option page and enter your key in the designated field. You can also change the ChatGPT language model version in the options page.
 
 ## Built With
  - OpenAI API
