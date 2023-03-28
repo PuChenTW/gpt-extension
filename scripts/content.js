@@ -22,6 +22,12 @@ var progressSpinIcon = null;
 const dialogId = "gpt-ex-dialog";
 const progressSpinId = "gpt-ex-spin";
 
+function getSelectionRect() {
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+    return range.getBoundingClientRect();
+}
+
 function setDialogInnerText(data) {
     const progressSpin = document.getElementById(progressSpinId);
     if (progressSpin) {
@@ -31,6 +37,9 @@ function setDialogInnerText(data) {
     const dialog = document.getElementById(dialogId);
     if (dialog) {
         dialog.innerHTML = data.trim();
+        const { left, bottom, width } = getSelectionRect()
+        dialog.style.top = `${bottom + window.scrollY + 5}px`;
+        dialog.style.left = `${left + window.scrollX + width / 2 - dialog.offsetWidth / 2}px`;
     }
 }
 
@@ -85,15 +94,6 @@ function createDialog(selectText, dialogTop, dialogLeft) {
     grammerCheckButton.style.width = "22px";
     grammerCheckButton.style.height = "23px";
 
-    grammerCheckButton.addEventListener("mouseup", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        grammerCheckButton.style.display = "none";
-        translateButton.style.display = "none";
-        spin.style.display = "flex";
-        grammerCheck(selectText.trim().replace(/\n/g, " "), setDialogInnerText);
-    });
-
     const translateButton = document.createElement("button");
     translateButton.classList.add(
         "cs-p-4x",
@@ -106,17 +106,30 @@ function createDialog(selectText, dialogTop, dialogLeft) {
         "cs-border-slate-700",
         "cs-cursor-pointer"
     );
-    translateButton.appendChild(translateIcon)
+    translateButton.appendChild(translateIcon);
     translateButton.style.borderColor = "#BBBBBB";
     translateButton.style.width = "22px";
     translateButton.style.height = "23px";
 
-    translateButton.addEventListener("mouseup", (e) => {
+    const btnOnMouseUp = e => {
         e.preventDefault();
         e.stopPropagation();
         grammerCheckButton.style.display = "none";
         translateButton.style.display = "none";
         spin.style.display = "flex";
+
+        const { left, bottom, width } = getSelectionRect()
+        dialog.style.top = `${bottom + window.scrollY + 5}px`;;
+        dialog.style.left = `${left + window.scrollX + width / 2 - dialog.offsetWidth / 2}px`;
+    }
+
+    grammerCheckButton.addEventListener("mouseup", (e) => {
+        btnOnMouseUp(e)
+        grammerCheck(selectText.trim().replace(/\n/g, " "), setDialogInnerText);
+    });
+
+    translateButton.addEventListener("mouseup", (e) => {
+        btnOnMouseUp(e)
         googleTranslate(selectText.trim().replace(/\n/g, " "), setDialogInnerText);
     });
 
@@ -142,16 +155,9 @@ function removeDialog() {
 function onMouseup(e) {
     const selection = window.getSelection();
     const text = selection.toString().trim();
-    if (
-        !document.getElementById(dialogId) &&
-        text.length > 0 &&
-        text.length < 300
-    ) {
-        const range = selection.getRangeAt(0);
-        const dialogTop = `${range.getBoundingClientRect().bottom + window.scrollY + 5
-            }px`;
-        const dialogLeft = `${range.getBoundingClientRect().left + window.scrollX
-            }px`;
+    if (!document.getElementById(dialogId) && text.length > 0 && text.length < 300) {
+        const dialogTop = `${e.clientY+ window.scrollY + 5}px`;
+        const dialogLeft = `${e.clientX + window.scrollX}px`;
         createDialog(text, dialogTop, dialogLeft);
     }
 }
