@@ -21,6 +21,17 @@ var progressSpinIcon = null;
 
 const dialogId = "gpt-ex-dialog";
 const progressSpinId = "gpt-ex-spin";
+const btnClass = [
+    "cs-p-4x",
+    "cs-mx-2x",
+    "cs-bg-lime-500",
+    "cs-rounded-md",
+    "cs-shadow-lg",
+    "cs-border",
+    "cs-border-solid",
+    "cs-border-slate-700",
+    "cs-cursor-pointer"
+]
 
 function getSelectionRect() {
     const selection = window.getSelection();
@@ -78,34 +89,14 @@ function createDialog(selectText, dialogTop, dialogLeft) {
     spin.appendChild(innerText);
 
     const grammerCheckButton = document.createElement("button");
-    grammerCheckButton.classList.add(
-        "cs-p-4x",
-        "cs-mx-2x",
-        "cs-bg-lime-500",
-        "cs-rounded-md",
-        "cs-shadow-lg",
-        "cs-border",
-        "cs-border-solid",
-        "cs-border-slate-700",
-        "cs-cursor-pointer"
-    );
+    grammerCheckButton.classList.add(...btnClass);
     grammerCheckButton.appendChild(checkIcon);
     grammerCheckButton.style.borderColor = "#BBBBBB";
     grammerCheckButton.style.width = "22px";
     grammerCheckButton.style.height = "23px";
 
     const translateButton = document.createElement("button");
-    translateButton.classList.add(
-        "cs-p-4x",
-        "cs-mx-2x",
-        "cs-bg-cyan-500",
-        "cs-rounded-md",
-        "cs-shadow-lg",
-        "cs-border",
-        "cs-border-solid",
-        "cs-border-slate-700",
-        "cs-cursor-pointer"
-    );
+    translateButton.classList.add(...btnClass);
     translateButton.appendChild(translateIcon);
     translateButton.style.borderColor = "#BBBBBB";
     translateButton.style.width = "22px";
