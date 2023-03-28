@@ -1,28 +1,23 @@
-// Saves options to chrome.storage
-function save_options() {
-    console.log("test")
-    const key = document.getElementById('key').value;
-    chrome.storage.local.set({
-        key: key,
-    }, () => {
-        // Update status to let user know options were saved.
-        var status = document.getElementById('status');
-        status.style.visibility = "inherit";
-        setTimeout(() => {
-            status.style.visibility = "hidden";
-        }, 1000);
-    });
+function save_options({ target: { value: key } }) {
+    chrome.storage.local.set({ key });
 }
 
-// Restores select box and checkbox state using the preferences
-// stored in chrome.storage.
-function restore_options() {
-    console.log("test2")
-    chrome.storage.local.get({
-        key: '',
-    }, ({ key }) => {
-        document.getElementById('key').value = key;
-    });
+function changeModel({ target: { value: model } }) {
+    chrome.storage.local.set({ model });
 }
-document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('save').addEventListener('click', save_options);
+
+function restore_options() {
+    chrome.storage.local.get(
+        {
+            key: "",
+            model: "gpt-3.5-turbo",
+        },
+        ({ key, model }) => {
+            document.getElementById("key").value = key;
+            document.getElementById("model").value = model;
+        }
+    );
+}
+document.addEventListener("DOMContentLoaded", restore_options);
+document.getElementById("key").addEventListener("input", save_options);
+document.getElementById("model").addEventListener("change", changeModel);

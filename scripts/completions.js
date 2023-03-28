@@ -1,11 +1,14 @@
 var authKey = "";
+var chatModel = "gpt-3.5-turbo";
 
 chrome.storage.local.get(
     {
         key: "",
+        model: chatModel
     },
-    ({ key }) => {
+    ({ key, model }) => {
         authKey = key;
+        chatModel = model;
     }
 );
 
@@ -23,7 +26,7 @@ export function grammerCheckbyChatGPT(text, callback) {
             Authorization: `Bearer ${authKey}`,
         },
         body: JSON.stringify({
-            model: "gpt-3.5-turbo-0301",
+            model: chatModel,
             messages: [
                 {
                     role: "system",
