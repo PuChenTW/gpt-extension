@@ -43,7 +43,11 @@ export function grammerCheckbyChatGPT(text, callback) {
                 );
             } else {
                 const data = await response.json();
-                callback(data?.choices?.[0]?.message?.content.trim().replace(/^"|"$/g, ""));
+                let answer = data?.choices?.[0]?.message?.content.trim();
+                if (answer.startsWith('"')) {
+                    answer = answer.replace(/^"|"$/g, "");
+                }
+                callback(answer);
             }
         })
         .catch((error) => {
