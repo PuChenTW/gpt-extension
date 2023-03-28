@@ -46,7 +46,7 @@ function setDialogInnerText(data) {
 
     const dialog = document.getElementById(dialogId);
     if (dialog) {
-        dialog.innerHTML = data.trim();
+        dialog.innerHTML = data.trim().replace(/\n/g, '<br>');
         const { left, bottom, width } = getSelectionRect()
         dialog.style.top = `${bottom + window.scrollY + 5}px`;
         dialog.style.left = `${left + window.scrollX + width / 2 - dialog.offsetWidth / 2}px`;
