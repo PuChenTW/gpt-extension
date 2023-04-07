@@ -35,7 +35,13 @@ const btnClass = [
 function getSelectionRect() {
     const selection = window.getSelection();
     const range = selection.getRangeAt(0);
-    return range.getBoundingClientRect();
+    const rect = range.getBoundingClientRect();
+    // When the selection is in textarea, the bounding rect is not correct.
+    // return the bounding rect of the textarea instead.
+    // Can we use textarea.selectionStart and textarea.selectionEnd to calculate the dialog position?
+    if (rect.width === 0 && rect.height === 0)
+        return selection.anchorNode.getBoundingClientRect()
+    return rect
 }
 
 function setDialogInnerText(data) {
@@ -108,8 +114,8 @@ function createDialog(selectText, dialogTop, dialogLeft) {
         translateButton.style.display = "none";
         spin.style.display = "flex";
 
-        const { left, bottom, width } = getSelectionRect()
-        dialog.style.top = `${bottom + window.scrollY + 5}px`;;
+        const { left, bottom, width } = getSelectionRect();
+        dialog.style.top = `${bottom + window.scrollY + 5}px`;
         dialog.style.left = `${left + window.scrollX + width / 2 - dialog.offsetWidth / 2}px`;
     }
 
