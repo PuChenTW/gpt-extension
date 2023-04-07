@@ -29,13 +29,12 @@ export function grammerCheckbyChatGPT(text, callback) {
             model: chatModel,
             messages: [
                 {
-                    role: "system",
-                    content:
-                        "You are a grammar checker. If the sentences have some errors, give the user the correct sentences and suggestions.",
+                    role: "user",
+                    content: `You are a grammar checker, if there are errors, provide the correct sentences and suggestions. Please check the following sentences:\n"""\n${text}\n"""`
                 },
-                { role: "user", content: `"${text}"` },
             ],
             max_tokens: text.length + 150,
+            temperature: 0.2,
         }),
     })
         .then(async (response) => {
