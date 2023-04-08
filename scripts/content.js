@@ -8,7 +8,9 @@ var progressSpinIcon = null;
 // Use dynamic import to import modules.
 // https://stackoverflow.com/questions/48104433/how-to-import-es6-modules-in-content-script-for-chrome-extension
 (async () => {
-    const completions = await import(chrome.runtime.getURL("scripts/completions.js"));
+    const completions = await import(
+        chrome.runtime.getURL("scripts/completions.js")
+    );
     grammerCheck = completions.grammerCheckbyChatGPT;
     definitionbyChatGPT = completions.definitionbyChatGPT;
     const translate = await import(chrome.runtime.getURL("scripts/translate.js"));
@@ -29,8 +31,8 @@ const btnClass = [
     "cs-border",
     "cs-border-solid",
     "cs-border-slate-700",
-    "cs-cursor-pointer"
-]
+    "cs-cursor-pointer",
+];
 
 function getSelectionRect() {
     const selection = window.getSelection();
@@ -40,8 +42,8 @@ function getSelectionRect() {
     // return the bounding rect of the textarea instead.
     // Can we use textarea.selectionStart and textarea.selectionEnd to calculate the dialog position?
     if (rect.width === 0 && rect.height === 0)
-        return selection.anchorNode.getBoundingClientRect()
-    return rect
+        return selection.anchorNode.getBoundingClientRect();
+    return rect;
 }
 
 function setDialogInnerText(data) {
@@ -52,10 +54,11 @@ function setDialogInnerText(data) {
 
     const dialog = document.getElementById(dialogId);
     if (dialog) {
-        dialog.innerHTML = data.trim().replace(/\n/g, '<br>');
-        const { left, bottom, width } = getSelectionRect()
+        dialog.innerHTML = data.trim().replace(/\n/g, "<br>");
+        const { left, bottom, width } = getSelectionRect();
         dialog.style.top = `${bottom + window.scrollY + 5}px`;
-        dialog.style.left = `${left + window.scrollX + width / 2 - dialog.offsetWidth / 2}px`;
+        dialog.style.left = `${left + window.scrollX + width / 2 - dialog.offsetWidth / 2
+            }px`;
     }
 }
 
@@ -107,7 +110,7 @@ function createDialog(selectText, dialogTop, dialogLeft) {
     translateButton.style.width = "22px";
     translateButton.style.height = "23px";
 
-    const btnOnMouseUp = e => {
+    const btnOnMouseUp = (e) => {
         e.preventDefault();
         e.stopPropagation();
         grammerCheckButton.style.display = "none";
@@ -116,16 +119,17 @@ function createDialog(selectText, dialogTop, dialogLeft) {
 
         const { left, bottom, width } = getSelectionRect();
         dialog.style.top = `${bottom + window.scrollY + 5}px`;
-        dialog.style.left = `${left + window.scrollX + width / 2 - dialog.offsetWidth / 2}px`;
-    }
+        dialog.style.left = `${left + window.scrollX + width / 2 - dialog.offsetWidth / 2
+            }px`;
+    };
 
     grammerCheckButton.addEventListener("mouseup", (e) => {
-        btnOnMouseUp(e)
+        btnOnMouseUp(e);
         grammerCheck(selectText.trim().replace(/\n/g, " "), setDialogInnerText);
     });
 
     translateButton.addEventListener("mouseup", (e) => {
-        btnOnMouseUp(e)
+        btnOnMouseUp(e);
         googleTranslate(selectText.trim().replace(/\n/g, " "), setDialogInnerText);
     });
 
@@ -151,8 +155,12 @@ function removeDialog() {
 function onMouseup(e) {
     const selection = window.getSelection();
     const text = selection.toString().trim();
-    if (!document.getElementById(dialogId) && text.length > 0 && text.length < 300) {
-        const dialogTop = `${e.clientY+ window.scrollY + 5}px`;
+    if (
+        !document.getElementById(dialogId) &&
+        text.length > 0 &&
+        text.length < 300
+    ) {
+        const dialogTop = `${e.clientY + window.scrollY + 5}px`;
         const dialogLeft = `${e.clientX + window.scrollX}px`;
         createDialog(text, dialogTop, dialogLeft);
     }
