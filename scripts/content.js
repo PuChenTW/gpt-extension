@@ -37,13 +37,20 @@ const btnClass = [
 function getSelectionRect() {
     const selection = window.getSelection();
     const range = selection.getRangeAt(0);
-    const rect = range.getBoundingClientRect();
-    // When the selection is in textarea, the bounding rect is not correct.
-    // return the bounding rect of the textarea instead.
-    // Can we use textarea.selectionStart and textarea.selectionEnd to calculate the dialog position?
-    if (rect.width === 0 && rect.height === 0)
-        return selection.anchorNode.getBoundingClientRect();
-    return rect;
+    return range.getBoundingClientRect();
+}
+
+function moveDialogBySelectionRect() {
+    const dialog = document.getElementById(dialogId);
+    if (dialog) {
+        const { left, bottom, width, height } = getSelectionRect();
+        // If width and height both are 0, the selection is empty.
+        if (width !== 0 && height !== 0) {
+            dialog.style.top = `${bottom + window.scrollY + 5}px`;
+            dialog.style.left = `${left + window.scrollX + width / 2 - dialog.offsetWidth / 2
+                }px`;
+        }
+    }
 }
 
 function setDialogInnerText(data) {
@@ -55,10 +62,7 @@ function setDialogInnerText(data) {
     const dialog = document.getElementById(dialogId);
     if (dialog) {
         dialog.innerHTML = data.trim().replace(/\n/g, "<br>");
-        const { left, bottom, width } = getSelectionRect();
-        dialog.style.top = `${bottom + window.scrollY + 5}px`;
-        dialog.style.left = `${left + window.scrollX + width / 2 - dialog.offsetWidth / 2
-            }px`;
+        moveDialogBySelectionRect()
     }
 }
 
@@ -116,11 +120,7 @@ function createDialog(selectText, dialogTop, dialogLeft) {
         grammerCheckButton.style.display = "none";
         translateButton.style.display = "none";
         spin.style.display = "flex";
-
-        const { left, bottom, width } = getSelectionRect();
-        dialog.style.top = `${bottom + window.scrollY + 5}px`;
-        dialog.style.left = `${left + window.scrollX + width / 2 - dialog.offsetWidth / 2
-            }px`;
+        moveDialogBySelectionRect()
     };
 
     grammerCheckButton.addEventListener("mouseup", (e) => {
