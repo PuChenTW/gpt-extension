@@ -11,8 +11,7 @@ var progressSpinIcon = null;
     const completions = await import(
         chrome.runtime.getURL("scripts/completions.js")
     );
-    grammerCheck = completions.grammerCheckbyChatGPT;
-    definitionbyChatGPT = completions.definitionbyChatGPT;
+    grammerCheck = completions.grammerCheckbyChatGPTStream;
     const translate = await import(chrome.runtime.getURL("scripts/translate.js"));
     googleTranslate = translate.googleTranslate;
     const icons = await import(chrome.runtime.getURL("scripts/icons.js"));
@@ -61,7 +60,7 @@ function setDialogInnerText(data) {
 
     const dialog = document.getElementById(dialogId);
     if (dialog) {
-        dialog.innerHTML = data.trim().replace(/\n/g, "<br>");
+        dialog.innerHTML += data.replace(/\n/g, "<br>");
         moveDialogBySelectionRect()
     }
 }
