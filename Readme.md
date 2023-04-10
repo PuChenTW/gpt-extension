@@ -25,9 +25,7 @@ To install the extension, follow these steps:
 The extension should now be installed and ready to use.
 
 ### Usage
-https://user-images.githubusercontent.com/11731323/228188383-1984f978-ce73-4bbb-8229-34fb730cd7f1.mov
-
-
+https://user-images.githubusercontent.com/11731323/230857781-0c60a2a6-6556-4504-b007-87180861c732.mov
 
 ### Settings
 To set your OpenAI API key, go to the extension's option page and enter your key in the designated field. You can also change the ChatGPT language model version in the options page.
