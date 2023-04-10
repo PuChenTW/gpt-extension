@@ -1,6 +1,8 @@
 # Grammar Checker Chrome Extension
 This is a Google Chrome extension that provides a quick and easy way to check the grammar of text on websites. The extension uses OpenAI's ChatGPT language model to analyze the selected text and provide suggestions for improvement.
 
+The extension also uses Google Translate API to translate the text on websites.
+
 ## Getting Started
 ### Prerequisites
 To use this extension, you will need a Google Chrome web browser and an OpenAI API key.
