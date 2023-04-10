@@ -11,7 +11,7 @@ var progressSpinIcon = null;
     const completions = await import(
         chrome.runtime.getURL("scripts/completions.js")
     );
-    grammerCheck = completions.grammerCheckbyChatGPTStream;
+    grammerCheck = completions.grammerCheckbyChatGPT;
     const translate = await import(chrome.runtime.getURL("scripts/translate.js"));
     googleTranslate = translate.googleTranslate;
     const icons = await import(chrome.runtime.getURL("scripts/icons.js"));
