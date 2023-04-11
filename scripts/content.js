@@ -22,9 +22,52 @@ var ready = false;
     ready = true;
 })();
 
-class Dialog {
+class Button {
+    constructor(icon, color) {
+        this.button = document.createElement("button");
+        this.button.classList.add("button", color);
+        this.button.appendChild(icon);
+    }
+
+    setOnMouseUp(onMouseUp) {
+        this.button.addEventListener("mouseup", onMouseUp);
+    }
+
+    show() {
+        this.button.style.display = "flex";
+    }
+
+    hide() {
+        this.button.style.display = "none";
+    }
+}
+
+class LoadingSpin {
+    constructor() {
+        this.spin = document.createElement("div");
+        this.spin.classList.add("cs-items-center", "cs-justify-center", "cs-p-4x");
+        this.spin.style.display = "none";
+
+        const loadingText = document.createElement("div");
+        loadingText.innerText = "Processing...";
+
+        this.spin.append(progressSpinIcon);
+        this.spin.appendChild(loadingText);
+    }
+
+    show() {
+        this.spin.style.display = "flex";
+    }
+
+    hide() {
+        this.spin.style.display = "none";
+    }
+}
+
+class PopupDialog {
     constructor() {
         this.dialog = null;
+        this.spin = null;
         this.grammerCheckButton = null;
         this.translateButton = null;
         this.resultContainer = null;
@@ -36,64 +79,46 @@ class Dialog {
         this.dialog.id = "gpt-ex-dialog";
         this.dialog.style.display = "none";
 
-        this.spin = document.createElement("div");
-        this.spin.classList.add("cs-items-center", "cs-justify-center", "cs-p-4x");
-        this.spin.style.display = "none";
+        this.spin = new LoadingSpin();
 
-        const innerText = document.createElement("div");
-        innerText.innerText = "Processing...";
+        this.grammerCheckButton = new Button(checkIcon, "cs-bg-lime-500");
+        this.translateButton = new Button(translateIcon, "cs-bg-cyan-500");
+        const buttonList = [this.grammerCheckButton, this.translateButton];
 
-        this.spin.append(progressSpinIcon);
-        this.spin.appendChild(innerText);
+        const genOnMouseUp = (api) => {
+            const btnOnMouseUp = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                buttonList.forEach((button) => button.hide());
+                this.spin.show();
+                this.moveDialogBySelectionRect();
+            };
 
-        this.grammerCheckButton = document.createElement("button");
-        this.grammerCheckButton.classList.add("button", "cs-bg-lime-500");
-        this.grammerCheckButton.appendChild(checkIcon);
+            const apiCallback = (data) => {
+                this.spin.hide();
+                this.setDialogInnerText(data);
+                this.moveDialogBySelectionRect();
+            };
 
-        this.translateButton = document.createElement("button");
-        this.translateButton.classList.add("button", "cs-bg-cyan-500");
-        this.translateButton.appendChild(translateIcon);
-
-        const btnOnMouseUp = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.grammerCheckButton.style.display = "none";
-            this.translateButton.style.display = "none";
-            this.spin.style.display = "flex";
-            this.moveDialogBySelectionRect();
+            return (e) => {
+                btnOnMouseUp(e);
+                api(this.selectText.trim().replace(/\n/g, " "), apiCallback);
+            };
         };
 
-        const callback = (data) => {
-            this.removeProgressSpin();
-            this.setDialogInnerText(data);
-            this.moveDialogBySelectionRect();
-        };
+        this.grammerCheckButton.setOnMouseUp(genOnMouseUp(grammerCheck));
+        this.translateButton.setOnMouseUp(genOnMouseUp(googleTranslate));
 
-        this.grammerCheckButton.addEventListener("mouseup", (e) => {
-            btnOnMouseUp(e);
-            grammerCheck(this.selectText.trim().replace(/\n/g, " "), callback);
-        });
-
-        this.translateButton.addEventListener("mouseup", (e) => {
-            btnOnMouseUp(e);
-            googleTranslate(this.selectText.trim().replace(/\n/g, " "), callback);
-        });
-
+        buttonList.forEach(({ button }) => this.dialog.appendChild(button));
         this.resultContainer = document.createElement("div");
-
-        this.dialog.appendChild(this.grammerCheckButton);
-        this.dialog.appendChild(this.translateButton);
-        this.dialog.appendChild(this.spin);
+        this.dialog.appendChild(this.spin.spin);
         this.dialog.appendChild(this.resultContainer);
+
         document.body.appendChild(this.dialog);
     }
 
     setSelectText(text) {
         this.selectText = text;
-    }
-
-    removeProgressSpin() {
-        this.spin.style.display = "none";
     }
 
     setDialogInnerText(data) {
@@ -111,9 +136,10 @@ class Dialog {
         const { left, bottom, width, height } = range.getBoundingClientRect();
         // If width and height both are 0, the selection is empty.
         if (width !== 0 && height !== 0) {
-            const dialogTop = `${bottom + window.scrollY + 5}px`;
-            const dialogLeft = `${left + window.scrollX + width / 2 - this.dialog.offsetWidth / 2
-                }px`;
+            const { scrollX, scrollY } = window;
+            const { offsetWidth } = this.dialog;
+            const dialogTop = `${bottom + scrollY + 5}px`;
+            const dialogLeft = `${left + scrollX + width / 2 - offsetWidth / 2}px`;
             this.moveDialog(dialogTop, dialogLeft);
         }
     }
@@ -142,8 +168,12 @@ class Dialog {
             dialog.create();
         }
         // If the selected text has less than 2 spaces, it probaily not a sentence.
-        this.grammerCheckButton.style.display = this.selectText.split(" ").length - 1 > 1 ? "flex" : "none";
-        this.translateButton.style.display = "flex";
+        if (this.selectText.split(" ").length - 1 > 1) {
+            this.grammerCheckButton.show();
+        } else {
+            this.grammerCheckButton.hide();
+        }
+        this.translateButton.show();
         this.dialog.style.display = "flex";
         this.moveDialog(dialogTop, dialogLeft);
     }
@@ -157,7 +187,7 @@ class Dialog {
     }
 }
 
-const dialog = new Dialog();
+const dialog = new PopupDialog();
 
 document.addEventListener("mouseup", (e) => {
     if (dialog.isShowing() && !dialog.clickInDialog(e)) {
