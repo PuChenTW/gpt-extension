@@ -111,6 +111,7 @@ class PopupDialog {
 
         buttonList.forEach(({ button }) => this.dialog.appendChild(button));
         this.resultContainer = document.createElement("div");
+        this.resultContainer.id = "result-container"
         this.dialog.appendChild(this.spin.spin);
         this.dialog.appendChild(this.resultContainer);
 
@@ -122,7 +123,7 @@ class PopupDialog {
     }
 
     setDialogInnerText(data) {
-        this.resultContainer.innerHTML += data.replace(/\n/g, "<br>");
+        this.resultContainer.innerText += data;
     }
 
     moveDialog(top, left) {

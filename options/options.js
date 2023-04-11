@@ -1,4 +1,4 @@
-const DefaultPrompt = "You are a grammar checker, if there are errors, provide the correct sentences and suggestions. Please check the following sentences:"
+const DefaultPrompt = `You are a grammar checker, if there are errors, provide the correct sentences and suggestions. Please check the following sentences:\n"""\n{{text}}\n"""`;
 
 function changeKey({ target: { value: key } }) {
     chrome.storage.local.set({ key });

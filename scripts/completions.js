@@ -1,6 +1,6 @@
 var authKey = "";
 var chatModel = "gpt-3.5-turbo";
-var msgPrompt = "You are a grammar checker, if there are errors, provide the correct sentences and suggestions. Please check the following sentences:";
+var msgPrompt = `You are a grammar checker, if there are errors, provide the correct sentences and suggestions. Please check the following sentences:\n"""\n{{text}}\n"""`;
 
 chrome.storage.local.get(
     {
@@ -34,7 +34,7 @@ export async function grammerCheckbyChatGPT(text, callback) {
                 messages: [
                     {
                         role: "user",
-                        content: `${msgPrompt}\n"""\n${text}\n"""`
+                        content: msgPrompt.replace("{{text}}", text),
                     },
                 ],
                 max_tokens: text.length + 150,
