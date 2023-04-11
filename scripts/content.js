@@ -53,15 +53,16 @@ function moveDialogBySelectionRect() {
 }
 
 function setDialogInnerText(data) {
-    const progressSpin = document.getElementById(progressSpinId);
-    if (progressSpin) {
-        progressSpin.style.display = "none";
-    }
-
     const dialog = document.getElementById(dialogId);
     if (dialog) {
         dialog.innerHTML += data.replace(/\n/g, "<br>");
-        moveDialogBySelectionRect()
+    }
+}
+
+function removeProgressSpin() {
+    const progressSpin = document.getElementById(progressSpinId);
+    if (progressSpin) {
+        progressSpin.style.display = "none";
     }
 }
 
@@ -122,14 +123,20 @@ function createDialog(selectText, dialogTop, dialogLeft) {
         moveDialogBySelectionRect()
     };
 
+    const callback = (data) => {
+        removeProgressSpin();
+        setDialogInnerText(data);
+        moveDialogBySelectionRect();
+    }
+
     grammerCheckButton.addEventListener("mouseup", (e) => {
         btnOnMouseUp(e);
-        grammerCheck(selectText.trim().replace(/\n/g, " "), setDialogInnerText);
+        grammerCheck(selectText.trim().replace(/\n/g, " "), callback);
     });
 
     translateButton.addEventListener("mouseup", (e) => {
         btnOnMouseUp(e);
-        googleTranslate(selectText.trim().replace(/\n/g, " "), setDialogInnerText);
+        googleTranslate(selectText.trim().replace(/\n/g, " "), callback);
     });
 
     if (selectText.split(" ").length - 1 > 1) {
