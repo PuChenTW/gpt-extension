@@ -6,7 +6,7 @@ chrome.storage.local.get(
     {
         key: "",
         model: chatModel,
-        prompt: "",
+        prompt: msgPrompt,
     },
     ({ key, model, prompt }) => {
         authKey = key;
