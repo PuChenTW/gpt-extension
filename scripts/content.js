@@ -4,6 +4,7 @@ var definition = null;
 var translateIcon = null;
 var checkIcon = null;
 var progressSpinIcon = null;
+var ready = false;
 
 // Use dynamic import to import modules.
 // https://stackoverflow.com/questions/48104433/how-to-import-es6-modules-in-content-script-for-chrome-extension
@@ -18,178 +19,157 @@ var progressSpinIcon = null;
     translateIcon = icons.translateIcon;
     checkIcon = icons.checkIcon;
     progressSpinIcon = icons.progressSpinIcon;
+    ready = true;
 })();
 
-const dialogId = "gpt-ex-dialog";
-const progressSpinId = "gpt-ex-spin";
-const btnClass = [
-    "cs-p-4x",
-    "cs-mx-2x",
-    "cs-rounded-md",
-    "cs-shadow-lg",
-    "cs-border",
-    "cs-border-solid",
-    "cs-border-slate-700",
-    "cs-cursor-pointer",
-];
+class Dialog {
+    constructor() {
+        this.dialog = null;
+        this.grammerCheckButton = null;
+        this.translateButton = null;
+        this.resultContainer = null;
+        this.selectText = "";
+    }
 
-function getSelectionRect() {
-    const selection = window.getSelection();
-    const range = selection.getRangeAt(0);
-    return range.getBoundingClientRect();
-}
+    create() {
+        this.dialog = document.createElement("div");
+        this.dialog.id = "gpt-ex-dialog";
+        this.dialog.style.display = "none";
 
-function moveDialogBySelectionRect() {
-    const dialog = document.getElementById(dialogId);
-    if (dialog) {
-        const { left, bottom, width, height } = getSelectionRect();
+        this.spin = document.createElement("div");
+        this.spin.classList.add("cs-items-center", "cs-justify-center", "cs-p-4x");
+        this.spin.style.display = "none";
+
+        const innerText = document.createElement("div");
+        innerText.innerText = "Processing...";
+
+        this.spin.append(progressSpinIcon);
+        this.spin.appendChild(innerText);
+
+        this.grammerCheckButton = document.createElement("button");
+        this.grammerCheckButton.classList.add("button", "cs-bg-lime-500");
+        this.grammerCheckButton.appendChild(checkIcon);
+
+        this.translateButton = document.createElement("button");
+        this.translateButton.classList.add("button", "cs-bg-cyan-500");
+        this.translateButton.appendChild(translateIcon);
+
+        const btnOnMouseUp = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.grammerCheckButton.style.display = "none";
+            this.translateButton.style.display = "none";
+            this.spin.style.display = "flex";
+            this.moveDialogBySelectionRect();
+        };
+
+        const callback = (data) => {
+            this.removeProgressSpin();
+            this.setDialogInnerText(data);
+            this.moveDialogBySelectionRect();
+        };
+
+        this.grammerCheckButton.addEventListener("mouseup", (e) => {
+            btnOnMouseUp(e);
+            grammerCheck(this.selectText.trim().replace(/\n/g, " "), callback);
+        });
+
+        this.translateButton.addEventListener("mouseup", (e) => {
+            btnOnMouseUp(e);
+            googleTranslate(this.selectText.trim().replace(/\n/g, " "), callback);
+        });
+
+        this.resultContainer = document.createElement("div");
+
+        this.dialog.appendChild(this.grammerCheckButton);
+        this.dialog.appendChild(this.translateButton);
+        this.dialog.appendChild(this.spin);
+        this.dialog.appendChild(this.resultContainer);
+        document.body.appendChild(this.dialog);
+    }
+
+    setSelectText(text) {
+        this.selectText = text;
+    }
+
+    removeProgressSpin() {
+        this.spin.style.display = "none";
+    }
+
+    setDialogInnerText(data) {
+        this.resultContainer.innerHTML += data.replace(/\n/g, "<br>");
+    }
+
+    moveDialog(top, left) {
+        this.dialog.style.top = top;
+        this.dialog.style.left = left;
+    }
+
+    moveDialogBySelectionRect() {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const { left, bottom, width, height } = range.getBoundingClientRect();
         // If width and height both are 0, the selection is empty.
         if (width !== 0 && height !== 0) {
-            dialog.style.top = `${bottom + window.scrollY + 5}px`;
-            dialog.style.left = `${left + window.scrollX + width / 2 - dialog.offsetWidth / 2
+            const dialogTop = `${bottom + window.scrollY + 5}px`;
+            const dialogLeft = `${left + window.scrollX + width / 2 - this.dialog.offsetWidth / 2
                 }px`;
+            this.moveDialog(dialogTop, dialogLeft);
+        }
+    }
+
+    clickInDialog(e) {
+        const rect = this.dialog.getBoundingClientRect();
+        if (!rect) return false;
+
+        return (
+            e.clientX >= rect.left &&
+            e.clientX <= rect.right &&
+            e.clientY >= rect.top &&
+            e.clientY <= rect.bottom
+        );
+    }
+
+    isShowing() {
+        return this.dialog !== null && this.dialog.style.display === "flex";
+    }
+
+    show(text, dialogTop, dialogLeft) {
+        this.selectText = text;
+        // We need to wait for the asyncronous import to complete.
+        // So instead of creating the dialog in constructor, we create it here.
+        if (this.dialog === null) {
+            dialog.create();
+        }
+        // If the selected text has less than 2 spaces, it probaily not a sentence.
+        this.grammerCheckButton.style.display = this.selectText.split(" ").length - 1 > 1 ? "flex" : "none";
+        this.translateButton.style.display = "flex";
+        this.dialog.style.display = "flex";
+        this.moveDialog(dialogTop, dialogLeft);
+    }
+
+    hide() {
+        if (this.dialog !== null) {
+            this.dialog.style.display = "none";
+            this.selectText = "";
+            this.resultContainer.innerHTML = "";
         }
     }
 }
 
-function setDialogInnerText(data) {
-    const dialog = document.getElementById(dialogId);
-    if (dialog) {
-        dialog.innerHTML += data.replace(/\n/g, "<br>");
-    }
-}
-
-function removeProgressSpin() {
-    const progressSpin = document.getElementById(progressSpinId);
-    if (progressSpin) {
-        progressSpin.style.display = "none";
-    }
-}
-
-function createDialog(selectText, dialogTop, dialogLeft) {
-    const dialog = document.createElement("div");
-    dialog.id = dialogId;
-    dialog.classList.add(
-        "cs-p-4x",
-        "cs-max-w-sm",
-        "cs-bg-white",
-        "cs-rounded",
-        "cs-shadow-lg",
-        "cs-font-sans",
-        "cs-text-14x",
-        "cs-flex",
-        "cs-items-center",
-        "cs-absolute",
-        "cs-border",
-        "cs-border-solid",
-        "cs-text-slate-800"
-    );
-    dialog.style.zIndex = Number.MAX_SAFE_INTEGER;
-    dialog.style.top = dialogTop;
-    dialog.style.left = dialogLeft;
-    dialog.style.borderColor = "#BBBBBB";
-
-    const spin = document.createElement("div");
-    spin.id = progressSpinId;
-    spin.classList.add("cs-items-center", "cs-justify-center", "cs-p-4x");
-    spin.style.display = "none";
-
-    const innerText = document.createElement("div");
-    innerText.innerText = "Processing...";
-
-    spin.append(progressSpinIcon);
-    spin.appendChild(innerText);
-
-    const grammerCheckButton = document.createElement("button");
-    grammerCheckButton.classList.add(...btnClass, "cs-bg-lime-500");
-    grammerCheckButton.appendChild(checkIcon);
-    grammerCheckButton.style.borderColor = "#BBBBBB";
-    grammerCheckButton.style.width = "22px";
-    grammerCheckButton.style.height = "23px";
-
-    const translateButton = document.createElement("button");
-    translateButton.classList.add(...btnClass, "cs-bg-cyan-500");
-    translateButton.appendChild(translateIcon);
-    translateButton.style.borderColor = "#BBBBBB";
-    translateButton.style.width = "22px";
-    translateButton.style.height = "23px";
-
-    const btnOnMouseUp = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        grammerCheckButton.style.display = "none";
-        translateButton.style.display = "none";
-        spin.style.display = "flex";
-        moveDialogBySelectionRect()
-    };
-
-    const callback = (data) => {
-        removeProgressSpin();
-        setDialogInnerText(data);
-        moveDialogBySelectionRect();
-    }
-
-    grammerCheckButton.addEventListener("mouseup", (e) => {
-        btnOnMouseUp(e);
-        grammerCheck(selectText.trim().replace(/\n/g, " "), callback);
-    });
-
-    translateButton.addEventListener("mouseup", (e) => {
-        btnOnMouseUp(e);
-        googleTranslate(selectText.trim().replace(/\n/g, " "), callback);
-    });
-
-    if (selectText.split(" ").length - 1 > 1) {
-        // If the selected text has less than 2 spaces, it probaily not a sentence.
-        dialog.appendChild(grammerCheckButton);
-    }
-    dialog.appendChild(translateButton);
-    dialog.appendChild(spin);
-
-    document.body.appendChild(dialog);
-
-    return dialog;
-}
-
-function removeDialog() {
-    const dialog = document.getElementById(dialogId);
-    if (dialog) {
-        document.body.removeChild(dialog);
-    }
-}
-
-function onMouseup(e) {
-    const selection = window.getSelection();
-    const text = selection.toString().trim();
-    if (
-        !document.getElementById(dialogId) &&
-        text.length > 0 &&
-        text.length < 300
-    ) {
-        const dialogTop = `${e.clientY + window.scrollY + 5}px`;
-        const dialogLeft = `${e.clientX + window.scrollX}px`;
-        createDialog(text, dialogTop, dialogLeft);
-    }
-}
-
-function clickInDialog(e) {
-    const rect = document.getElementById(dialogId)?.getBoundingClientRect();
-    if (!rect) return false;
-
-    return (
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom
-    );
-}
+const dialog = new Dialog();
 
 document.addEventListener("mouseup", (e) => {
-    onMouseup(e);
-});
+    if (dialog.isShowing() && !dialog.clickInDialog(e)) {
+        dialog.hide();
+        return;
+    }
 
-document.addEventListener("mousedown", (e) => {
-    if (!clickInDialog(e)) {
-        removeDialog();
+    const selection = window.getSelection();
+    const text = selection.toString().trim();
+    if (ready && !dialog.isShowing() && text.length > 0 && text.length < 300) {
+        const dialogTop = `${e.clientY + window.scrollY + 5}px`;
+        const dialogLeft = `${e.clientX + window.scrollX}px`;
+        dialog.show(text, dialogTop, dialogLeft);
     }
 });
