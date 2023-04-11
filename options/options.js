@@ -17,17 +17,23 @@ function resetPrompt() {
     chrome.storage.local.set({ prompt: DefaultPrompt });
 }
 
+function changeLanguage({ target: { value: language } }) {
+    chrome.storage.local.set({ language });
+}
+
 function restoreOptions() {
     chrome.storage.local.get(
         {
             key: "",
             model: "gpt-3.5-turbo",
             prompt: DefaultPrompt,
+            language: "en"
         },
-        ({ key, model, prompt }) => {
+        ({ key, model, prompt, language }) => {
             document.getElementById("key").value = key;
             document.getElementById("model").value = model;
             document.getElementById("prompt").textContent = prompt;
+            document.getElementById("language").value = language;
         }
     );
 }
@@ -36,3 +42,4 @@ document.getElementById("key").addEventListener("input", changeKey);
 document.getElementById("model").addEventListener("change", changeModel);
 document.getElementById("prompt").addEventListener("input", changePrompt);
 document.getElementById("reset").addEventListener("click", resetPrompt);
+document.getElementById("language").addEventListener("change", changeLanguage);
