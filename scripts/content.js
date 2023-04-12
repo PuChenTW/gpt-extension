@@ -25,7 +25,7 @@ var ready = false;
 class Button {
     constructor(icon, color) {
         this.button = document.createElement("button");
-        this.button.classList.add("button", color);
+        this.button.classList.add("cs-button", color);
         this.button.appendChild(icon);
     }
 
