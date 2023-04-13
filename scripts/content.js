@@ -133,15 +133,17 @@ class PopupDialog {
 
     moveDialogBySelectionRect() {
         const selection = window.getSelection();
-        const range = selection.getRangeAt(0);
-        const { left, bottom, width, height } = range.getBoundingClientRect();
-        // If width and height both are 0, the selection is empty.
-        if (width !== 0 && height !== 0) {
-            const { scrollX, scrollY } = window;
-            const { offsetWidth } = this.dialog;
-            const dialogTop = `${bottom + scrollY + 5}px`;
-            const dialogLeft = `${left + scrollX + width / 2 - offsetWidth / 2}px`;
-            this.moveDialog(dialogTop, dialogLeft);
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            const { left, bottom, width, height } = range.getBoundingClientRect();
+            // If width and height both are 0, the selection is empty.
+            if (width !== 0 && height !== 0) {
+                const { scrollX, scrollY } = window;
+                const { offsetWidth } = this.dialog;
+                const dialogTop = `${bottom + scrollY + 5}px`;
+                const dialogLeft = `${left + scrollX + width / 2 - offsetWidth / 2}px`;
+                this.moveDialog(dialogTop, dialogLeft);
+            }
         }
     }
 
