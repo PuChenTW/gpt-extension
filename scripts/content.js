@@ -27,6 +27,11 @@ class Button {
         this.button = document.createElement("button");
         this.button.classList.add("cs-button", color);
         this.button.appendChild(icon);
+        // Prevent the selection been cleared by mouse down.
+        this.button.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        })
     }
 
     setOnMouseUp(onMouseUp) {
