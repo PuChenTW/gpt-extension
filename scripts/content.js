@@ -29,8 +29,8 @@ class Button {
         this.button.appendChild(icon);
     }
 
-    setOnMouseDown(onMouseDown) {
-        this.button.addEventListener("mousedown", onMouseDown);
+    setOnMouseUp(onMouseUp) {
+        this.button.addEventListener("mouseup", onMouseUp);
     }
 
     show() {
@@ -85,8 +85,8 @@ class PopupDialog {
         this.translateButton = new Button(translateIcon, "cs-bg-cyan-500");
         const buttonList = [this.grammerCheckButton, this.translateButton];
 
-        const onMouseDownFactory = (api) => {
-            const btnOnMouseDown = (e) => {
+        const genOnMouseUp = (api) => {
+            const btnOnMouseUp = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 buttonList.forEach((button) => button.hide());
@@ -101,13 +101,13 @@ class PopupDialog {
             };
 
             return (e) => {
-                btnOnMouseDown(e);
+                btnOnMouseUp(e);
                 api(this.selectText.trim().replace(/\n/g, " "), apiCallback);
             };
         };
 
-        this.grammerCheckButton.setOnMouseDown(onMouseDownFactory(chatGptComplete));
-        this.translateButton.setOnMouseDown(onMouseDownFactory(googleTranslate));
+        this.grammerCheckButton.setOnMouseUp(genOnMouseUp(chatGptComplete));
+        this.translateButton.setOnMouseUp(genOnMouseUp(googleTranslate));
 
         buttonList.forEach(({ button }) => this.dialog.appendChild(button));
         this.resultContainer = document.createElement("div");
