@@ -11,7 +11,7 @@ chrome.storage.local.get(
 
 
 export function googleTranslate(text, callback) {
-    fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLanguage}&hl=en-US&dt=t&dt=bd&dj=1&source=icon&q=${text}`, {
+    fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLanguage}&hl=en-US&dt=t&dt=bd&dj=1&source=icon&q=${encodeURI(text)}`, {
         method: 'GET'
     })
         .then(response => response.json())
