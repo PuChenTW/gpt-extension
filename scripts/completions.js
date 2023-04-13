@@ -21,7 +21,7 @@ const statusMap = {
     500: "Server error. Retry your request later.",
 };
 
-export async function grammerCheckbyChatGPT(text, callback) {
+export async function chatGptComplete(text, callback) {
     try {
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",

@@ -1,4 +1,4 @@
-var grammerCheck = null;
+var chatGptComplete = null;
 var googleTranslate = null;
 var definition = null;
 var translateIcon = null;
@@ -12,7 +12,7 @@ var ready = false;
     const completions = await import(
         chrome.runtime.getURL("scripts/completions.js")
     );
-    grammerCheck = completions.grammerCheckbyChatGPT;
+    chatGptComplete = completions.chatGptComplete;
     const translate = await import(chrome.runtime.getURL("scripts/translate.js"));
     googleTranslate = translate.googleTranslate;
     const icons = await import(chrome.runtime.getURL("scripts/icons.js"));
@@ -106,7 +106,7 @@ class PopupDialog {
             };
         };
 
-        this.grammerCheckButton.setOnMouseUp(genOnMouseUp(grammerCheck));
+        this.grammerCheckButton.setOnMouseUp(genOnMouseUp(chatGptComplete));
         this.translateButton.setOnMouseUp(genOnMouseUp(googleTranslate));
 
         buttonList.forEach(({ button }) => this.dialog.appendChild(button));
@@ -186,6 +186,7 @@ class PopupDialog {
             this.dialog.style.display = "none";
             this.selectText = "";
             this.resultContainer.innerHTML = "";
+            this.spin.hide();
         }
     }
 }
