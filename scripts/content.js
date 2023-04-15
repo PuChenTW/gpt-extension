@@ -75,7 +75,7 @@ class PopupDialog {
         this.spin = null;
         this.grammerCheckButton = null;
         this.translateButton = null;
-        this.resultContainer = null;
+        this.resultResult = null;
         this.selectText = "";
     }
 
@@ -115,10 +115,35 @@ class PopupDialog {
         this.translateButton.setOnMouseUp(genOnMouseUp(googleTranslate));
 
         buttonList.forEach(({ button }) => this.dialog.appendChild(button));
-        this.resultContainer = document.createElement("div");
-        this.resultContainer.id = "result-container"
+        const resultContainer = document.createElement("div");
+        resultContainer.id = "result-container"
+
+        this.resultResult = document.createElement("div");
+
+        this.tooltip = document.createElement("span");
+        this.tooltip.classList.add("cs-tooltiptext")
+
+        resultContainer.appendChild(this.tooltip);
+        resultContainer.appendChild(this.resultResult);
+
+        resultContainer.addEventListener("mouseover", () => {
+            this.tooltip.innerText = "click to copy"
+            this.tooltip.style.visibility = "visible";
+        })
+
+        resultContainer.addEventListener("mouseout", () => {
+            this.tooltip.style.visibility = "hidden";
+        })
+
         this.dialog.appendChild(this.spin.spin);
-        this.dialog.appendChild(this.resultContainer);
+        this.dialog.appendChild(resultContainer);
+
+        this.dialog.addEventListener("mouseup", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigator.clipboard.writeText(this.getDialogInnerText());
+            this.tooltip.innerText = "copied";
+        })
 
         document.body.appendChild(this.dialog);
     }
@@ -128,7 +153,11 @@ class PopupDialog {
     }
 
     setDialogInnerText(data) {
-        this.resultContainer.innerText += data;
+        this.resultResult.innerText += data;
+    }
+
+    getDialogInnerText() {
+        return this.resultResult.innerText;
     }
 
     moveDialog(top, left) {
@@ -150,18 +179,6 @@ class PopupDialog {
                 this.moveDialog(dialogTop, dialogLeft);
             }
         }
-    }
-
-    clickInDialog(e) {
-        const rect = this.dialog.getBoundingClientRect();
-        if (!rect) return false;
-
-        return (
-            e.clientX >= rect.left &&
-            e.clientX <= rect.right &&
-            e.clientY >= rect.top &&
-            e.clientY <= rect.bottom
-        );
     }
 
     isShowing() {
@@ -190,7 +207,7 @@ class PopupDialog {
         if (this.dialog !== null) {
             this.dialog.style.display = "none";
             this.selectText = "";
-            this.resultContainer.innerHTML = "";
+            this.resultResult.innerHTML = "";
             this.spin.hide();
         }
     }
@@ -199,16 +216,15 @@ class PopupDialog {
 const dialog = new PopupDialog();
 
 document.addEventListener("mouseup", (e) => {
-    if (dialog.isShowing() && !dialog.clickInDialog(e)) {
+    if (dialog.isShowing()) {
         dialog.hide();
-        return;
-    }
-
-    const selection = window.getSelection();
-    const text = selection.toString().trim();
-    if (ready && !dialog.isShowing() && text.length > 0 && text.length < 300) {
-        const dialogTop = `${e.clientY + window.scrollY + 5}px`;
-        const dialogLeft = `${e.clientX + window.scrollX}px`;
-        dialog.show(text, dialogTop, dialogLeft);
+    } else {
+        const selection = window.getSelection();
+        const text = selection.toString().trim();
+        if (ready && !dialog.isShowing() && text.length > 0 && text.length < 300) {
+            const dialogTop = `${e.clientY + window.scrollY + 5}px`;
+            const dialogLeft = `${e.clientX + window.scrollX}px`;
+            dialog.show(text, dialogTop, dialogLeft);
+        }
     }
 });
