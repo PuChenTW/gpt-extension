@@ -75,6 +75,7 @@ class PopupDialog {
         this.spin = null;
         this.grammerCheckButton = null;
         this.translateButton = null;
+        this.buttonList = [];
         this.resultResult = null;
         this.selectText = "";
     }
@@ -88,13 +89,13 @@ class PopupDialog {
 
         this.grammerCheckButton = new Button(checkIcon, "cs-bg-lime-500");
         this.translateButton = new Button(translateIcon, "cs-bg-cyan-500");
-        const buttonList = [this.grammerCheckButton, this.translateButton];
+        this.buttonList = [this.grammerCheckButton, this.translateButton];
 
         const genOnMouseUp = (api) => {
             const btnOnMouseUp = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                buttonList.forEach((button) => button.hide());
+                this.buttonList.forEach((button) => button.hide());
                 this.spin.show();
                 this.moveDialogBySelectionRect();
             };
@@ -114,7 +115,7 @@ class PopupDialog {
         this.grammerCheckButton.setOnMouseUp(genOnMouseUp(chatGptComplete));
         this.translateButton.setOnMouseUp(genOnMouseUp(googleTranslate));
 
-        buttonList.forEach(({ button }) => this.dialog.appendChild(button));
+        this.buttonList.forEach(({ button }) => this.dialog.appendChild(button));
         const resultContainer = document.createElement("div");
         resultContainer.id = "result-container"
 
@@ -192,13 +193,7 @@ class PopupDialog {
         if (this.dialog === null) {
             dialog.create();
         }
-        // If the selected text has less than 2 spaces, it probaily not a sentence.
-        if (this.selectText.split(" ").length - 1 > 1) {
-            this.grammerCheckButton.show();
-        } else {
-            this.grammerCheckButton.hide();
-        }
-        this.translateButton.show();
+        this.buttonList.forEach(btn => btn.show());
         this.dialog.style.display = "flex";
         this.moveDialog(dialogTop, dialogLeft);
     }
