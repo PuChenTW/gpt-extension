@@ -31,7 +31,7 @@ class Button {
         this.button.addEventListener("mousedown", (e) => {
             e.preventDefault();
             e.stopPropagation();
-        })
+        });
     }
 
     setOnMouseUp(onMouseUp) {
@@ -117,24 +117,24 @@ class PopupDialog {
 
         this.buttonList.forEach(({ button }) => this.dialog.appendChild(button));
         const resultContainer = document.createElement("div");
-        resultContainer.id = "result-container"
+        resultContainer.id = "result-container";
 
         this.resultResult = document.createElement("div");
 
         this.tooltip = document.createElement("span");
-        this.tooltip.classList.add("cs-tooltiptext")
+        this.tooltip.classList.add("cs-tooltiptext");
 
         resultContainer.appendChild(this.tooltip);
         resultContainer.appendChild(this.resultResult);
 
         resultContainer.addEventListener("mouseover", () => {
-            this.tooltip.innerText = "click to copy"
+            this.tooltip.innerText = "click to copy";
             this.tooltip.style.visibility = "visible";
-        })
+        });
 
         resultContainer.addEventListener("mouseout", () => {
             this.tooltip.style.visibility = "hidden";
-        })
+        });
 
         this.dialog.appendChild(this.spin.spin);
         this.dialog.appendChild(resultContainer);
@@ -144,7 +144,7 @@ class PopupDialog {
             e.stopPropagation();
             navigator.clipboard.writeText(this.getDialogInnerText());
             this.tooltip.innerText = "copied";
-        })
+        });
 
         document.body.appendChild(this.dialog);
     }
@@ -193,7 +193,7 @@ class PopupDialog {
         if (this.dialog === null) {
             dialog.create();
         }
-        this.buttonList.forEach(btn => btn.show());
+        this.buttonList.forEach((btn) => btn.show());
         this.dialog.style.display = "flex";
         this.moveDialog(dialogTop, dialogLeft);
     }
