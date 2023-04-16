@@ -216,7 +216,7 @@ document.addEventListener("mouseup", (e) => {
     } else {
         const selection = window.getSelection();
         const text = selection.toString().trim();
-        if (ready && !dialog.isShowing() && text.length > 0 && text.length < 300) {
+        if (ready && !dialog.isShowing() && text.length > 0) {
             const dialogTop = `${e.clientY + window.scrollY + 5}px`;
             const dialogLeft = `${e.clientX + window.scrollX}px`;
             dialog.show(text, dialogTop, dialogLeft);
