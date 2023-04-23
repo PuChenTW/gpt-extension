@@ -209,8 +209,19 @@ class PopupDialog {
 }
 
 const dialog = new PopupDialog();
+var blackList = [];
+
+chrome.storage.local.get(
+    {
+        blackList: ["www.youtube.com"],
+    },
+    ({ blackList: blackList_ }) => {
+        blackList = blackList_;
+    }
+);
 
 document.addEventListener("mouseup", (e) => {
+    if (blackList.includes(window.location.hostname)) return;
     if (dialog.isShowing()) {
         dialog.hide();
     } else {
