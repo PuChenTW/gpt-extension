@@ -1,9 +1,11 @@
 const path = require("path");
 const tailwindcss = require('tailwindcss')
 const autoprefixer = require('autoprefixer')
+const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = {
   entry: {
+    content: path.resolve('src/content/index.tsx'),
     options: path.resolve('src/options/index.tsx'),
   },
   mode: "production",
@@ -49,6 +51,11 @@ module.exports = {
   },
   output: {
     filename: '[name].js',
-    path: path.join(__dirname, 'dist')
+    path: path.join(__dirname, '..', 'extension')
+  },
+  optimization: {
+    minimizer: [new TerserPlugin({
+      extractComments: false,
+    })],
   },
 };
