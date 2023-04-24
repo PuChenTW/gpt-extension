@@ -11,18 +11,7 @@
     },
     "content_scripts": [
         {
-            "js": ["scripts/content.js"],
-            "css": ["scripts/content.css"],
-            "matches": ["<all_urls>"]
-        }
-    ],
-    "web_accessible_resources": [
-        {
-            "resources": [ 
-                "scripts/completions.js",
-                "scripts/translate.js",
-                "scripts/icons.js"
-            ],
+            "js": ["content.js"],
             "matches": ["<all_urls>"]
         }
     ],
@@ -33,5 +22,5 @@
     "background": {
         "service_worker": "background.js"
     },
-    "options_page": "options/options.html"
+    "options_page": "options.html"
 }
