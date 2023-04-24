@@ -31,16 +31,16 @@ export function PromptInput() {
     <div>
       <textarea
         id="prompt"
-        className="w-80 block text-sm p-2 rounded-md border border-gray-300 h-40"
+        className="cs-w-80 cs-block cs-text-sm cs-p-2 cs-rounded-md cs-border cs-border-gray-300 cs-h-40"
         onInput={onChangePrompt}
         value={prompt}
       />
-      <p className="font-sans text-teal-800">
+      <p className="cs-font-sans cs-text-teal-800">
         {"{{text}} will be replaced with selected text"}
       </p>
       <button
         id="reset"
-        className="my-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className="cs-my-2 cs-bg-blue-500 hover:cs-bg-blue-700 cs-text-white cs-font-bold cs-py-2 cs-px-4 cs-rounded"
         onClick={onResetClick}
       >
         Reset

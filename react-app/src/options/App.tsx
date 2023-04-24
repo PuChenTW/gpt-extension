@@ -9,7 +9,7 @@ interface labelName {
 
 function Label({ labelName }: labelName) {
   return (
-    <label className="block text-sm font-medium text-gray-900">
+    <label className="cs-block cs-text-sm cs-font-medium cs-text-gray-900">
       {labelName}
     </label>
   );
@@ -17,8 +17,8 @@ function Label({ labelName }: labelName) {
 
 function App() {
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="grid grid-cols-2 items-center gap-4">
+    <div className="cs-flex cs-h-screen cs-items-center cs-justify-center">
+      <div className="cs-grid cs-grid-cols-2 cs-items-center cs-gap-4">
         <Label labelName="Primary Language"></Label>
         <LanguageInput />
         <Label labelName="Your ChatGPT API Key"></Label>

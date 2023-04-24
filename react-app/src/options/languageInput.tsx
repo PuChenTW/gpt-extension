@@ -162,7 +162,7 @@ export function LanguageInput() {
   return (
     <select
       id="language"
-      className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+      className="cs-block cs-w-full cs-rounded-lg cs-border cs-border-gray-300 cs-bg-gray-50 cs-p-2.5 cs-text-sm cs-text-gray-900 focus:cs-border-blue-500 focus:cs-ring-blue-500"
       value={language}
       onChange={onChangeLanguage}
     >
