@@ -2,7 +2,6 @@ import { PromptInput } from "./promptInput"
 import { KeyInput } from "./keyInput"
 import { ModelInput } from "./modelInput"
 import { LanguageInput } from "./languageInput"
-import "./App.css";
 
 interface labelName {
   labelName: string;
