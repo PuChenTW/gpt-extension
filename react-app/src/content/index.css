@@ -1,0 +1,65 @@
+@tailwind components;
+@tailwind utilities;
+#gpt-ex-dialog {
+    padding: 4px;
+    max-width: 24rem;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    border-radius: 0.25rem;
+    --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 14px;
+    align-items: center;
+    position: absolute;
+    border-width: 1px;
+    border-style: solid;
+    --tw-text-opacity: 1;
+    color: rgb(30 41 59 / var(--tw-text-opacity));
+    border-color: #BBBBBB;
+    z-index: 9007199254740991;
+    display: flex;
+}
+
+#result-container {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 14px;
+    white-space: pre-wrap;
+    line-height: 1.25;
+}
+
+.cs-tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgb(107 114 128 / var(--tw-text-opacity));
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 0.25rem;
+   
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+  }
+
+.cs-button {
+    padding: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border-radius: 0.375rem;
+    --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    border-width: 1px;
+    border-style: solid;
+    --tw-border-opacity: 1;
+    border-color: rgb(51 65 85 / var(--tw-border-opacity));
+    cursor: pointer;
+    border-color: #BBBBBB;
+    width: 22px;
+    height: 23px;
+    display: flex;
+  }

@@ -4,25 +4,14 @@
     "version": "1.0",
     "description": "Grammer check extension using chatGPT API",
     "icons": {
-        "16": "icons/icon-16.png",
-        "32": "icons/icon-32.png",
-        "48": "icons/icon-48.png",
-        "128": "icons/icon-128.png"
+        "16": "extension/icons/icon-16.png",
+        "32": "extension/icons/icon-32.png",
+        "48": "extension/icons/icon-48.png",
+        "128": "extension/icons/icon-128.png"
     },
     "content_scripts": [
         {
-            "js": ["scripts/content.js"],
-            "css": ["scripts/content.css"],
-            "matches": ["<all_urls>"]
-        }
-    ],
-    "web_accessible_resources": [
-        {
-            "resources": [ 
-                "scripts/completions.js",
-                "scripts/translate.js",
-                "scripts/icons.js"
-            ],
+            "js": ["extension/content.js"],
             "matches": ["<all_urls>"]
         }
     ],
@@ -31,7 +20,7 @@
         "tabs"
     ],
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "extension/background.js"
     },
-    "options_page": "options/options.html"
+    "options_page": "extension/options.html"
 }
