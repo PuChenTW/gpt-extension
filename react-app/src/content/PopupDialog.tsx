@@ -7,7 +7,6 @@ import { chatGptComplete } from './completions'
 interface dialogProps {
     top?: string;
     left?: string;
-    hide: boolean;
     selectedText?: string;
     selection?: Selection;
 }
@@ -54,7 +53,7 @@ function ResultContainer({children}: {children: string}) {
     )
 }
 
-export function PopupDialog({top="0px", left="0px", hide, selectedText="", selection}: dialogProps) {
+export function PopupDialog({top="0px", left="0px", selectedText="", selection}: dialogProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [result, setResult] = useState("")
     const [hideButtons, setHideButtons] = useState(false)
@@ -82,46 +81,36 @@ export function PopupDialog({top="0px", left="0px", hide, selectedText="", selec
         event.stopPropagation()
         setLoading(true)
         setHideButtons(true)
+        moveDialogBySelectionRect()
         const callback = (text: string) => {
             setLoading(false)
             setResult(text)
         }
         googleTranslate(selectedText, callback)
-    }, [selectedText, setResult, setLoading])
+    }, [selectedText, setResult, setLoading, moveDialogBySelectionRect])
 
     const onChatGptButtonClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
         event.stopPropagation()
         setLoading(true)
         setHideButtons(true)
+        moveDialogBySelectionRect()
         const callback = (text: string) => {
             setLoading(false)
             setResult(previousResult => previousResult + text)
         }
         chatGptComplete(selectedText, callback)
-    }, [selectedText, setResult, setLoading])
+    }, [selectedText, setResult, setLoading, moveDialogBySelectionRect])
 
     useEffect(() => {
-        moveDialogBySelectionRect()
+        if (result) moveDialogBySelectionRect()
     }, [result])
-
-    useEffect(() => {
-        setPosition({top, left})
-    }, [top, left])
-
-    useEffect(() => {
-        if (hide) {
-            setResult("")
-            setHideButtons(false)
-            setLoading(false)
-        }
-    }, [hide, setResult])
 
     return (
         <div
             id="gpt-ex-dialog"
             ref={containerRef}
-            style={{...position, display: hide ? 'none' : 'flex'}}
+            style={{...position}}
         >
             <ChatGptButton onMouseUp={onChatGptButtonClick} hide={hideButtons}/>
             <TranslateButton onMouseUp={onTranslateButtonClick} hide={hideButtons}/>

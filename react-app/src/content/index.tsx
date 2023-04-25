@@ -19,13 +19,12 @@ document.addEventListener("mouseup", (e) => {
         showing = true;
         root.render(
           <React.StrictMode>
-            <PopupDialog top={dialogTop} left={dialogLeft} hide={false} selectedText={text} selection={selection} />
+            <PopupDialog top={dialogTop} left={dialogLeft} selectedText={text} selection={selection} />
           </React.StrictMode>
         );
     } else {
       root.render(
         <React.StrictMode>
-          <PopupDialog hide={true} />
         </React.StrictMode>
       );
       showing = false;
