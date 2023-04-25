@@ -10,7 +10,7 @@ chrome.storage.local.get(
 );
 
 interface responseData {
-    sentences: Array<{trans: string}>;
+    sentences: Array<{ trans: string }>;
 }
 
 export function googleTranslate(text: string, callback: Function) {
@@ -19,7 +19,7 @@ export function googleTranslate(text: string, callback: Function) {
     })
         .then(response => response.json())
         .then((data: responseData) => {
-            const sentences = data.sentences.map(({trans}) => trans)
+            const sentences = data.sentences.map(({ trans }) => trans)
             callback(sentences.join(" "))
         }).catch(error => {
             console.error('Error:', error);
