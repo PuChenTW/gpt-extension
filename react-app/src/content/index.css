@@ -28,6 +28,22 @@
     white-space: pre-wrap;
 }
 
+.cs-tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgb(107 114 128 / var(--tw-text-opacity));
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 0.25rem;
+   
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+  }
+
 .cs-button {
     padding: 4px;
     margin-left: 2px;

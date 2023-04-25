@@ -6,7 +6,7 @@ interface buttonProps {
   children?: JSX.Element;
   hide: boolean;
   className?: string;
-  onMouseUp: (event: MouseEvent) => void;
+  onMouseUp: (event: MouseEvent<HTMLButtonElement>) => void;
 };
 
 function Button({ children, className, onMouseUp, hide = false }: buttonProps) {
