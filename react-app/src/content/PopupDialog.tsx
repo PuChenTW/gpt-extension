@@ -76,30 +76,20 @@ export function PopupDialog({top="0px", left="0px", selectedText="", selection}:
         }
     }, [setPosition, containerRef, selection])
 
-    const onTranslateButtonClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault()
-        event.stopPropagation()
-        setLoading(true)
-        setHideButtons(true)
-        moveDialogBySelectionRect()
-        const callback = (text: string) => {
-            setLoading(false)
-            setResult(text)
+    const genButtonClick = useCallback((api: Function) => {
+        const onClick = (event: MouseEvent<HTMLButtonElement>) => {
+            event.preventDefault()
+            event.stopPropagation()
+            setLoading(true)
+            setHideButtons(true)
+            moveDialogBySelectionRect()
+            const apiCallback = (text: string) => {
+                setLoading(false)
+                setResult(previousResult => previousResult + text)
+            }
+            api(selectedText, apiCallback)
         }
-        googleTranslate(selectedText, callback)
-    }, [selectedText, setResult, setLoading, moveDialogBySelectionRect])
-
-    const onChatGptButtonClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault()
-        event.stopPropagation()
-        setLoading(true)
-        setHideButtons(true)
-        moveDialogBySelectionRect()
-        const callback = (text: string) => {
-            setLoading(false)
-            setResult(previousResult => previousResult + text)
-        }
-        chatGptComplete(selectedText, callback)
+        return onClick
     }, [selectedText, setResult, setLoading, moveDialogBySelectionRect])
 
     useEffect(() => {
@@ -112,8 +102,8 @@ export function PopupDialog({top="0px", left="0px", selectedText="", selection}:
             ref={containerRef}
             style={{...position}}
         >
-            <ChatGptButton onMouseUp={onChatGptButtonClick} hide={hideButtons}/>
-            <TranslateButton onMouseUp={onTranslateButtonClick} hide={hideButtons}/>
+            <ChatGptButton onMouseUp={genButtonClick(chatGptComplete)} hide={hideButtons}/>
+            <TranslateButton onMouseUp={genButtonClick(googleTranslate)} hide={hideButtons}/>
             <LoadingSpin hide={!loading}/>
             <ResultContainer>
                 {result}
