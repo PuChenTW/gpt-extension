@@ -1,8 +1,8 @@
 import { useState, useCallback, MouseEvent, useEffect, useRef } from "react";
 import { ChatGptButton, TranslateButton } from "./Button";
 import { ProgressSpin } from "./icons";
-import { googleTranslate } from "./translate";
-import { chatGptComplete } from "./completions";
+import { useGoogleTranslate } from "./translate";
+import { useChatGptComplete } from "./completions";
 
 interface dialogProps {
     top?: string;
@@ -75,6 +75,8 @@ export function PopupDialog({
     const [hideButtons, setHideButtons] = useState(false);
     const [loading, setLoading] = useState(false);
     const [position, setPosition] = useState({ top, left });
+    const chatGptComplete = useChatGptComplete()
+    const googleTranslate = useGoogleTranslate()
 
     const moveDialogBySelectionRect = useCallback(() => {
         if (selection && selection.rangeCount > 0) {
@@ -117,12 +119,12 @@ export function PopupDialog({
 
     return (
         <div id="gpt-ex-dialog" ref={containerRef} style={{ ...position }}>
-            <ChatGptButton
-                onMouseUp={genButtonClick(chatGptComplete)}
-                hide={hideButtons}
-            />
             <TranslateButton
                 onMouseUp={genButtonClick(googleTranslate)}
+                hide={hideButtons}
+            />
+            <ChatGptButton
+                onMouseUp={genButtonClick(chatGptComplete)}
                 hide={hideButtons}
             />
             <LoadingSpin hide={!loading} />
