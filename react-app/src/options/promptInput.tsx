@@ -1,5 +1,5 @@
 import { useState, useCallback, ChangeEvent } from "react";
-import { GrammerPrompt, SummaryPrompt} from "../utils/promptsUtils"
+import { GrammerPrompt, SummaryPrompt, AnalysisPrompt, QuizPrompt} from "../utils/promptsUtils"
 
 export function PromptInput({prompt, onChange}: {prompt: string, onChange: Function}) {
     const [localPrompt, setLocalPrompt] = useState(prompt);
@@ -11,15 +11,10 @@ export function PromptInput({prompt, onChange}: {prompt: string, onChange: Funct
         [setLocalPrompt]
     );
 
-    const onGrammerClick = useCallback(() => {
-        setLocalPrompt(GrammerPrompt);
-        onChange(GrammerPrompt)
-    }, [setLocalPrompt]);
-
-    const onSummaryClick = useCallback(() => {
-        setLocalPrompt(SummaryPrompt);
-        onChange(SummaryPrompt)
-    }, [setLocalPrompt]);
+    const onPredefinedPrompt = useCallback((prompt: string) => {
+        setLocalPrompt(prompt);
+        onChange(prompt) 
+    }, [setLocalPrompt])
 
     return (
         <div className="cs-flex cs-flex-col cs-items-center">
@@ -35,17 +30,31 @@ export function PromptInput({prompt, onChange}: {prompt: string, onChange: Funct
             <div>
                 <button
                     id="grammer"
-                    className="cs-my-2 cs-bg-blue-500 hover:cs-bg-blue-700 cs-text-white cs-font-bold cs-py-2 cs-px-4 cs-rounded"
-                    onClick={onGrammerClick}
+                    className="cs-my-2 cs-mx-2 cs-bg-blue-500 hover:cs-bg-blue-700 cs-text-white cs-font-bold cs-py-2 cs-px-4 cs-rounded"
+                    onClick={() => {onPredefinedPrompt(GrammerPrompt)}}
                 >
                     Grammer
                 </button>
                 <button
                     id="grammer"
                     className="cs-my-2 cs-mx-2 cs-bg-green-500 hover:cs-bg-green-700 cs-text-white cs-font-bold cs-py-2 cs-px-4 cs-rounded"
-                    onClick={onSummaryClick}
+                    onClick={() => {onPredefinedPrompt(SummaryPrompt)}}
                 >
                     Summary
+                </button>
+                <button
+                    id="grammer"
+                    className="cs-my-2 cs-mx-2 cs-bg-yellow-500 hover:cs-bg-yellow-700 cs-text-white cs-font-bold cs-py-2 cs-px-4 cs-rounded"
+                    onClick={() => {onPredefinedPrompt(QuizPrompt)}}
+                >
+                    Quiz
+                </button>
+                <button
+                    id="grammer"
+                    className="cs-my-2 cs-mx-2 cs-bg-red-500 hover:cs-bg-red-700 cs-text-white cs-font-bold cs-py-2 cs-px-4 cs-rounded"
+                    onClick={() => {onPredefinedPrompt(AnalysisPrompt)}}
+                >
+                    Analysis
                 </button>
             </div>
         </div>
