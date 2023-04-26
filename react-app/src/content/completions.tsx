@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 
-var msgPrompt = `You are a grammar checker, if there are errors, provide the correct sentences and suggestions. Please check the following sentences:\n"""\n{{text}}\n"""`;
-
 export function useChatGptComplete() {
     const [key, setKey] = useState("")
     const [model, setModel] = useState("gpt-3.5-turbo")
@@ -38,7 +36,7 @@ export function useChatGptComplete() {
                     messages: [
                         {
                             role: "user",
-                            content: msgPrompt.replace("{{text}}", text),
+                            content: text,
                         },
                     ],
                     max_tokens: text.length + 150,

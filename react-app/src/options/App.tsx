@@ -1,12 +1,12 @@
 
-import { useCallback, useEffect } from 'react';
-import { useImmer } from "use-immer";
+import { useCallback } from 'react';
 import { TabView, TabPanel} from 'primereact/tabview';
 
-import { PromptInput, GrammerPrompt } from "./promptInput"
+import { PromptInput } from "./promptInput"
 import { KeyInput } from "./keyInput"
 import { ModelInput } from "./modelInput"
 import { LanguageInput } from "./languageInput"
+import { usePrompts } from "../utils/promptsUtils"
 
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -23,30 +23,8 @@ function Label({ labelName }: labelName) {
     );
 }
 
-interface promptObject {
-    header: string
-    prompt: string
-}
-
 function App() {
-
-    const [prompts, updatePrompts] = useImmer<promptObject[]>([])
-
-    useEffect(() => {
-        chrome.storage.local.get(
-            {
-                prompts: [{header: "Grammer", prompt: GrammerPrompt}],
-            },
-            ({ prompts }) => {
-                console.log(prompts)
-                updatePrompts(prompts);
-            }
-        );
-    }, [updatePrompts])
-
-    useEffect(() => {
-        chrome.storage.local.set({prompts})
-    }, [prompts])
+    const [prompts, updatePrompts] = usePrompts();
 
     const onChangePrompt = useCallback((prompt: string, idx: number) => {
         updatePrompts(prompts => {

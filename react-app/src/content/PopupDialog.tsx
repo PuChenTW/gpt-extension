@@ -3,6 +3,7 @@ import { ChatGptButton, TranslateButton } from "./Button";
 import { ProgressSpin } from "./icons";
 import { useGoogleTranslate } from "./translate";
 import { useChatGptComplete } from "./completions";
+import { usePrompts } from "../utils/promptsUtils";
 
 interface dialogProps {
     top?: string;
@@ -77,6 +78,7 @@ export function PopupDialog({
     const [position, setPosition] = useState({ top, left });
     const chatGptComplete = useChatGptComplete()
     const googleTranslate = useGoogleTranslate()
+    const [prompts] = usePrompts()
 
     const moveDialogBySelectionRect = useCallback(() => {
         if (selection && selection.rangeCount > 0) {
@@ -94,24 +96,29 @@ export function PopupDialog({
         }
     }, [setPosition, containerRef, selection]);
 
-    const genButtonClick = useCallback(
-        (api: Function) => {
-            const onClick = (event: MouseEvent<HTMLButtonElement>) => {
-                event.preventDefault();
-                event.stopPropagation();
-                setLoading(true);
-                setHideButtons(true);
-                moveDialogBySelectionRect();
-                const apiCallback = (text: string) => {
-                    setLoading(false);
-                    setResult((previousResult) => previousResult + text);
-                };
-                api(selectedText, apiCallback);
-            };
-            return onClick;
-        },
-        [selectedText, setResult, setLoading, moveDialogBySelectionRect]
-    );
+    const onButtonClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setLoading(true);
+        setHideButtons(true);
+        moveDialogBySelectionRect();
+        const apiCallback = (text: string) => {
+            setLoading(false);
+            setResult((previousResult) => previousResult + text);
+        };
+        return apiCallback
+    }, [setLoading, setResult, setHideButtons, moveDialogBySelectionRect])
+
+    const onGoogleTranslate = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+        const callback = onButtonClick(event)
+        googleTranslate(selectedText, callback);
+    }, [googleTranslate, selectedText, onButtonClick])
+
+    const onChatGpt = useCallback((event: MouseEvent<HTMLButtonElement>, prompt: string) => {
+        const callback = onButtonClick(event)
+        const text = prompt.replace("{{text}}", selectedText)
+        chatGptComplete(text, callback);
+    }, [googleTranslate, selectedText, onButtonClick])
 
     useEffect(() => {
         if (result) moveDialogBySelectionRect();
@@ -120,13 +127,16 @@ export function PopupDialog({
     return (
         <div id="gpt-ex-dialog" ref={containerRef} style={{ ...position }}>
             <TranslateButton
-                onMouseUp={genButtonClick(googleTranslate)}
+                onMouseUp={onGoogleTranslate}
                 hide={hideButtons}
             />
-            <ChatGptButton
-                onMouseUp={genButtonClick(chatGptComplete)}
-                hide={hideButtons}
-            />
+            {prompts.map(({prompt}, idx) => (
+                <ChatGptButton
+                    key={idx}
+                    onMouseUp={(e) => {onChatGpt(e, prompt)}}
+                    hide={hideButtons}
+                />
+            ))}
             <LoadingSpin hide={!loading} />
             <ResultContainer>{result}</ResultContainer>
         </div>

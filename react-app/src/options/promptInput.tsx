@@ -1,7 +1,5 @@
 import { useState, useCallback, ChangeEvent } from "react";
-
-export const GrammerPrompt: string = `You are a grammar checker, if there are errors, provide the correct sentences and suggestions. Please check the following sentences:\n"""\n{{text}}\n"""`;
-const SummaryPrompt: string = `Summarize the following article:\n"""\n{{text}}\n"""`;
+import { GrammerPrompt, SummaryPrompt} from "../utils/promptsUtils"
 
 export function PromptInput({prompt, onChange}: {prompt: string, onChange: Function}) {
     const [localPrompt, setLocalPrompt] = useState(prompt);
