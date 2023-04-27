@@ -1,4 +1,4 @@
-import { useCallback, ChangeEvent, useState } from "react";
+import { useCallback, ChangeEvent } from "react";
 import {
     GrammarPrompt,
     SummaryPrompt,
@@ -9,8 +9,8 @@ import { InputText } from "primereact/inputtext";
 import { promptObject } from "../utils/promptsUtils";
 import { Button } from "primereact/button";
 import { Fieldset } from "primereact/fieldset";
-import { ColorPicker } from 'primereact/colorpicker';
-import { Tag } from 'primereact/tag';
+import { ColorPicker, ColorPickerChangeEvent } from 'primereact/colorpicker';
+import { useImmer } from "use-immer";
 
 export function PromptInput({
     promptObj,
@@ -19,35 +19,57 @@ export function PromptInput({
     promptObj: promptObject;
     onChange: Function;
 }) {
-    const [localPrompt, setLocalPrompt] = useState(promptObj.prompt);
-    const [localHeader, setLocalHeader] = useState(promptObj.header);
-    const [localColor, setLocalColor] = useState("84CC16");
-    const [localIcon, setLocalIcon] = useState("🔍")
+    const [localPromptObj, setLocalPromptObj] = useImmer(promptObj)
     const onChangePrompt = useCallback(
         (e: ChangeEvent<HTMLTextAreaElement>) => {
-            setLocalPrompt(e.target.value);
+            setLocalPromptObj(obj => {
+                obj.prompt = e.target.value
+            })
         },
-        [setLocalPrompt]
+        [setLocalPromptObj]
     );
 
     const onPredefinedPrompt = useCallback(
         (header: string, prompt: string) => {
-            setLocalPrompt(prompt);
-            setLocalHeader(header);
+            setLocalPromptObj(obj => {
+                obj.prompt = prompt
+                obj.header = header
+            })
         },
-        [setLocalPrompt, setLocalHeader]
+        [setLocalPromptObj]
     );
 
     const onChangeHeader = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
-            setLocalHeader(e.target.value);
+            setLocalPromptObj(obj => {
+                obj.header = e.target.value
+            })
         },
-        [setLocalPrompt]
+        [setLocalPromptObj]
     );
 
+    const onChangeIcon = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => {
+            if (e.target.value.length <= 2) {
+                setLocalPromptObj(obj => {
+                    obj.icon = e.target.value
+                })
+            }
+        },
+        [setLocalPromptObj]
+    )
+
+    const onChangeBgColor = useCallback((e: ColorPickerChangeEvent) => {
+        if (typeof e.value === "string") {
+            setLocalPromptObj(obj => {
+                obj.bgcolor = `#${e.value}`
+            })
+        }
+    }, [setLocalPromptObj])
+
     const onSave = useCallback(() => {
-        onChange({ prompt: localPrompt, header: localHeader });
-    }, [localPrompt, localHeader]);
+        onChange(localPromptObj);
+    }, [localPromptObj]);
 
     return (
         <div className="cs-flex cs-flex-col">
@@ -55,7 +77,7 @@ export function PromptInput({
                 <div className="cs-flex cs-items-center cs-mb-2 cs-gap-2">
                     <InputText
                         className="p-inputtext-sm"
-                        value={localHeader}
+                        value={localPromptObj.header}
                         onInput={onChangeHeader}
                     />
                 </div>
@@ -67,7 +89,7 @@ export function PromptInput({
                         id="prompt"
                         className="cs-w-80 cs-block cs-text-sm cs-p-2 cs-rounded-md cs-border cs-border-gray-300 cs-h-40"
                         onChange={onChangePrompt}
-                        value={localPrompt}
+                        value={localPromptObj.prompt}
                     />
                     <p className="cs-font-sans cs-text-teal-800">
                         {"{{text}} will be replaced with selected text"}
@@ -77,16 +99,16 @@ export function PromptInput({
             <Fieldset className="cs-mt-2 cs-w-1/2" legend="Icon">
                 <div className="cs-flex cs-flex-col cs-gap-2">
                     Icon background color
-                    <ColorPicker value={localColor} onChange={(e) => {
-                        if (typeof e.value === "string") {
-                            console.log(e.value)
-                            setLocalColor(e.value)
-                        }
-                    }}/>
+                    <ColorPicker value={localPromptObj.bgcolor} onChange={onChangeBgColor}/>
                     <div>Icon</div>
-                    <div>{localIcon}</div>
+                    <InputText
+                        style={{width: "2.8rem"}}
+                        className="p-inputtext-sm"
+                        value={localPromptObj.icon}
+                        onChange={onChangeIcon}
+                    />
                     <div>Preview</div>
-                    <button className="cs-button" style={{backgroundColor: `#${localColor}`}}>{localIcon}</button>
+                    <button className="cs-button" style={{backgroundColor: `${localPromptObj.bgcolor}`}}>{localPromptObj.icon}</button>
                 </div>
             </Fieldset>
             </div>
@@ -129,9 +151,7 @@ export function PromptInput({
                 </button>
                 <div className="cs-absolute cs-right-0 cs-top-0 cs-my-2">
                     <Button
-                        disabled={
-                            localPrompt == promptObj.prompt && localHeader == promptObj.header
-                        }
+                        disabled={ localPromptObj == promptObj }
                         onClick={onSave}
                         icon="pi pi-save"
                     />

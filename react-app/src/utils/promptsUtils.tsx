@@ -9,6 +9,8 @@ export const AnalysisPrompt: string = `Provide me with a brief analysis of this 
 export interface promptObject {
     header: string;
     prompt: string;
+    icon: string;
+    bgcolor: string;
 }
 
 export function usePrompts(): [promptObject[], Updater<promptObject[]>] {
@@ -17,7 +19,12 @@ export function usePrompts(): [promptObject[], Updater<promptObject[]>] {
     useEffect(() => {
         chrome.storage.local.get(
             {
-                prompts: [{ header: "Grammer", prompt: GrammarPrompt }],
+                prompts: [{ 
+                    header: "Grammer", 
+                    prompt: GrammarPrompt,
+                    icon: "🔍",
+                    bgcolor: "#84CC16"
+                }],
             },
             ({ prompts }) => {
                 updatePrompts(prompts);

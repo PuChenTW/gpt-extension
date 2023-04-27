@@ -59,7 +59,7 @@ function App() {
         <div className="cs-flex cs-flex-col cs-w-screen cs-items-center cs-absolute cs-top-32">
             <Toast ref={toast} />
             <div className="cs-w-1/2 cs-relative">
-                <TabView onBeforeTabClose={onDeletePrompt} activeIndex={2}>
+                <TabView onBeforeTabClose={onDeletePrompt}>
                     <TabPanel
                         header="General"
                         prevButton={undefined}
@@ -103,7 +103,12 @@ function App() {
                         onClick={() => {
                             updatePrompts((prompts) => [
                                 ...prompts,
-                                { header: `Prompt ${prompts.length}`, prompt: GrammarPrompt },
+                                { 
+                                    header: `Prompt ${prompts.length}`,
+                                    prompt: GrammarPrompt,
+                                    icon: "",
+                                    bgcolor: "FFFFFF",
+                                },
                             ]);
                         }}
                     />

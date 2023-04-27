@@ -130,8 +130,10 @@ export function PopupDialog({
                 onMouseUp={onGoogleTranslate}
                 hide={hideButtons}
             />
-            {prompts.map(({prompt}, idx) => (
+            {prompts.map(({prompt, icon, bgcolor}, idx) => (
                 <ChatGptButton
+                    icon={icon}
+                    bgcolor={bgcolor}
                     key={idx}
                     onMouseUp={(e) => {onChatGpt(e, prompt)}}
                     hide={hideButtons}
