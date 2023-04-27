@@ -107,7 +107,7 @@ function App() {
                                     header: `Prompt ${prompts.length}`,
                                     prompt: GrammarPrompt,
                                     icon: "",
-                                    bgcolor: "FFFFFF",
+                                    bgcolor: "#FFFFFF",
                                 },
                             ]);
                         }}
