@@ -37,13 +37,12 @@
     text-align: center;
     padding: 5px 0;
     border-radius: 0.25rem;
-   
     position: absolute;
     z-index: 1;
     top: 100%;
     left: 50%;
     margin-left: -60px;
-  }
+}
 
 .cs-button {
     padding: 4px;
@@ -62,4 +61,7 @@
     width: 22px;
     height: 23px;
     display: flex;
-  }
+    justify-content: center;
+    align-items: center;
+    font-size: 75%;
+}

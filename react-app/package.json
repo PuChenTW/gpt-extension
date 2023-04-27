@@ -6,10 +6,13 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "immer": "^10.0.1",
+    "primeicons": "^6.0.1",
     "primereact": "^9.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^4.4.2"
+    "typescript": "^4.4.2",
+    "use-immer": "^0.9.0"
   },
   "scripts": {
     "build": "webpack --watch --progress"
