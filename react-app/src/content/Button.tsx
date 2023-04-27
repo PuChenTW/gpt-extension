@@ -3,7 +3,7 @@ import { MouseEvent } from "react";
 import { TranslateIcon, CheckIcon } from "./icons";
 
 interface buttonProps {
-    children?: JSX.Element;
+    children?: JSX.Element | string;
     hide: boolean;
     className?: string;
     onMouseUp: (event: MouseEvent<HTMLButtonElement>) => void;

@@ -59,7 +59,7 @@ function App() {
         <div className="cs-flex cs-flex-col cs-w-screen cs-items-center cs-absolute cs-top-32">
             <Toast ref={toast} />
             <div className="cs-w-1/2 cs-relative">
-                <TabView onBeforeTabClose={onDeletePrompt}>
+                <TabView onBeforeTabClose={onDeletePrompt} activeIndex={2}>
                     <TabPanel
                         header="General"
                         prevButton={undefined}

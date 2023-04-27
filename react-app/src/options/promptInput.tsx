@@ -9,6 +9,8 @@ import { InputText } from "primereact/inputtext";
 import { promptObject } from "../utils/promptsUtils";
 import { Button } from "primereact/button";
 import { Fieldset } from "primereact/fieldset";
+import { ColorPicker } from 'primereact/colorpicker';
+import { Tag } from 'primereact/tag';
 
 export function PromptInput({
     promptObj,
@@ -19,6 +21,8 @@ export function PromptInput({
 }) {
     const [localPrompt, setLocalPrompt] = useState(promptObj.prompt);
     const [localHeader, setLocalHeader] = useState(promptObj.header);
+    const [localColor, setLocalColor] = useState("84CC16");
+    const [localIcon, setLocalIcon] = useState("🔍")
     const onChangePrompt = useCallback(
         (e: ChangeEvent<HTMLTextAreaElement>) => {
             setLocalPrompt(e.target.value);
@@ -56,7 +60,8 @@ export function PromptInput({
                     />
                 </div>
             </Fieldset>
-            <Fieldset className="cs-mt-2" legend="Prompt">
+            <div className="cs-flex cs-gap-2">
+            <Fieldset className="cs-mt-2 cs-w-1/2" legend="Prompt">
                 <div>
                     <textarea
                         id="prompt"
@@ -69,6 +74,22 @@ export function PromptInput({
                     </p>
                 </div>
             </Fieldset>
+            <Fieldset className="cs-mt-2 cs-w-1/2" legend="Icon">
+                <div className="cs-flex cs-flex-col cs-gap-2">
+                    Icon background color
+                    <ColorPicker value={localColor} onChange={(e) => {
+                        if (typeof e.value === "string") {
+                            console.log(e.value)
+                            setLocalColor(e.value)
+                        }
+                    }}/>
+                    <div>Icon</div>
+                    <div>{localIcon}</div>
+                    <div>Preview</div>
+                    <button className="cs-button" style={{backgroundColor: `#${localColor}`}}>{localIcon}</button>
+                </div>
+            </Fieldset>
+            </div>
             <div className="cs-relative">
                 <button
                     id="grammer"
