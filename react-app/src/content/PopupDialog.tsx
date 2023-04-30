@@ -1,6 +1,6 @@
 import { useState, useCallback, MouseEvent, useEffect, useRef } from "react";
-import { ChatGptButton, TranslateButton } from "./Button";
 import { ProgressSpin } from "./icons";
+import { ChatGptButton, TranslateButton } from "./Button";
 import { useGoogleTranslate } from "./translate";
 import { useChatGptComplete } from "./completions";
 import { usePrompts } from "../utils/promptsUtils";

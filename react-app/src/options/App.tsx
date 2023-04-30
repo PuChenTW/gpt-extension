@@ -1,17 +1,17 @@
 import { useCallback, useRef } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
 
 import { PromptInput } from "./promptInput";
 import { KeyInput } from "./keyInput";
 import { ModelInput } from "./modelInput";
 import { LanguageInput } from "./languageInput";
-import { usePrompts, GrammarPrompt, promptObject } from "../utils/promptsUtils";
+import { usePrompts, promptObject } from "../utils/promptsUtils";
 
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-import { Toast } from "primereact/toast";
 
 interface labelName {
     labelName: string;
@@ -48,12 +48,25 @@ function App() {
     const onDeletePrompt = useCallback(
         ({ index }: { index: number }) => {
             updatePrompts((prompts) => {
-                prompts.splice(index - 1, 1);
+                return prompts.filter((_, idx) => idx != index - 1)
             });
+            // Return false to avoid default behavior of closing the tab
             return false;
         },
         [updatePrompts]
     );
+
+    const onAddPrompt = useCallback(() => {
+        updatePrompts((prompts) => [
+            ...prompts,
+            {
+                header: `Prompt ${prompts.length}`,
+                prompt: "Type your prompt here: {{text}}",
+                icon: "",
+                bgcolor: "#FFFFFF",
+            },
+        ]);
+    }, [updatePrompts])
 
     return (
         <div className="cs-flex cs-flex-col cs-w-screen cs-items-center cs-absolute cs-top-32">
@@ -100,17 +113,7 @@ function App() {
                         rounded
                         text
                         disabled={prompts.length >= 4}
-                        onClick={() => {
-                            updatePrompts((prompts) => [
-                                ...prompts,
-                                { 
-                                    header: `Prompt ${prompts.length}`,
-                                    prompt: GrammarPrompt,
-                                    icon: "",
-                                    bgcolor: "#FFFFFF",
-                                },
-                            ]);
-                        }}
+                        onClick={onAddPrompt}
                     />
                 </div>
             </div>

@@ -1,16 +1,16 @@
 import { useCallback, ChangeEvent } from "react";
+import { useImmer } from "use-immer";
+import { Button } from "primereact/button";
+import { Fieldset } from "primereact/fieldset";
+import { InputText } from "primereact/inputtext";
+import { ColorPicker, ColorPickerChangeEvent } from 'primereact/colorpicker';
 import {
     GrammarPrompt,
     SummaryPrompt,
     AnalysisPrompt,
     QuizPrompt,
+    promptObject
 } from "../utils/promptsUtils";
-import { InputText } from "primereact/inputtext";
-import { promptObject } from "../utils/promptsUtils";
-import { Button } from "primereact/button";
-import { Fieldset } from "primereact/fieldset";
-import { ColorPicker, ColorPickerChangeEvent } from 'primereact/colorpicker';
-import { useImmer } from "use-immer";
 
 export function PromptInput({
     promptObj,
@@ -73,7 +73,7 @@ export function PromptInput({
 
     return (
         <div className="cs-flex cs-flex-col">
-            <Fieldset legend="Name">
+            <Fieldset legend="Title">
                 <div className="cs-flex cs-items-center cs-mb-2 cs-gap-2">
                     <InputText
                         className="p-inputtext-sm"
