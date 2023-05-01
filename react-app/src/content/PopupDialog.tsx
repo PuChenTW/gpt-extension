@@ -118,7 +118,7 @@ export function PopupDialog({
         const callback = onButtonClick(event)
         const text = prompt.replace("{{text}}", selectedText)
         chatGptComplete(text, callback);
-    }, [googleTranslate, selectedText, onButtonClick])
+    }, [chatGptComplete, selectedText, onButtonClick])
 
     useEffect(() => {
         if (result) moveDialogBySelectionRect();

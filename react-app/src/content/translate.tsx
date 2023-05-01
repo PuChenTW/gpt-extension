@@ -18,7 +18,7 @@ export function useGoogleTranslate() {
         );
     }, [setLanguage])
 
-    return useCallback((text: string, callback: Function) => {
+    return useCallback((text: string, callback: (result: string) => void) => {
         fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${language}&hl=en-US&dt=t&dt=bd&dj=1&source=icon&q=${encodeURI(text)}`, {
             method: 'GET'
         })
