@@ -1,5 +1,5 @@
 import { useState, useCallback, MouseEvent, useEffect, useRef } from "react";
-import { ProgressSpin } from "./icons";
+import { ProgressSpin } from "../utils/icons";
 import { ChatGptButton, TranslateButton } from "./Button";
 import { useGoogleTranslate } from "./translate";
 import { useChatGptComplete } from "./completions";
@@ -130,10 +130,11 @@ export function PopupDialog({
                 onMouseUp={onGoogleTranslate}
                 hide={hideButtons}
             />
-            {prompts.map(({prompt, icon, bgcolor}, idx) => (
+            {prompts.map(({prompt, icon, bgcolor, color}, idx) => (
                 <ChatGptButton
                     icon={icon}
                     bgcolor={bgcolor}
+                    color={color}
                     key={idx}
                     onMouseUp={(e) => {onChatGpt(e, prompt)}}
                     hide={hideButtons}

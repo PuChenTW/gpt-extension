@@ -11,6 +11,7 @@ import {
     QuizPrompt,
     promptObject
 } from "../utils/promptsUtils";
+import { FillColorIcon, TextColorIcon } from "../utils/icons";
 
 export function PromptInput({
     promptObj,
@@ -67,6 +68,14 @@ export function PromptInput({
         }
     }, [setLocalPromptObj])
 
+    const onChangeColor = useCallback((e: ColorPickerChangeEvent) => {
+        if (typeof e.value === "string") {
+            setLocalPromptObj(obj => {
+                obj.color = `#${e.value}`
+            })
+        }
+    }, [setLocalPromptObj])
+
     const onSave = useCallback(() => {
         onChange(localPromptObj);
     }, [localPromptObj]);
@@ -98,8 +107,12 @@ export function PromptInput({
             </Fieldset>
             <Fieldset className="cs-mt-2 cs-w-1/2" legend="Icon">
                 <div className="cs-flex cs-flex-col cs-gap-2">
-                    Icon background color
-                    <ColorPicker value={localPromptObj.bgcolor} onChange={onChangeBgColor}/>
+                    <div className="cs-flex cs-flex-row cs-gap-2 cs-items-center">
+                        <FillColorIcon/>
+                        <ColorPicker value={localPromptObj.bgcolor} onChange={onChangeBgColor}/>
+                        <TextColorIcon/>
+                        <ColorPicker value={localPromptObj.color} onChange={onChangeColor}/>
+                    </div>
                     <div>Icon</div>
                     <InputText
                         style={{width: "2.8rem"}}
@@ -108,7 +121,7 @@ export function PromptInput({
                         onChange={onChangeIcon}
                     />
                     <div>Preview</div>
-                    <button className="cs-button" style={{backgroundColor: `${localPromptObj.bgcolor}`}}>{localPromptObj.icon}</button>
+                    <button className="cs-button" style={{backgroundColor: localPromptObj.bgcolor, color: localPromptObj.color }}>{localPromptObj.icon}</button>
                 </div>
             </Fieldset>
             </div>

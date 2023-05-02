@@ -64,6 +64,7 @@ function App() {
                 prompt: "Type your prompt here: {{text}}",
                 icon: "",
                 bgcolor: "#FFFFFF",
+                color: "#000000"
             },
         ]);
     }, [updatePrompts])

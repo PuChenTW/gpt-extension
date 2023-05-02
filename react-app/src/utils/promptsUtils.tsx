@@ -11,6 +11,15 @@ export interface promptObject {
     prompt: string;
     icon: string;
     bgcolor: string;
+    color: string;
+}
+
+const defaultPrompt: promptObject = {
+    header: "Grammer",
+    prompt: GrammarPrompt,
+    icon: "🔍",
+    bgcolor: "#84CC16",
+    color: "#000000",
 }
 
 export function usePrompts(): [promptObject[], Updater<promptObject[]>] {
@@ -19,15 +28,10 @@ export function usePrompts(): [promptObject[], Updater<promptObject[]>] {
     useEffect(() => {
         chrome.storage.local.get(
             {
-                prompts: [{ 
-                    header: "Grammer", 
-                    prompt: GrammarPrompt,
-                    icon: "🔍",
-                    bgcolor: "#84CC16"
-                }],
+                prompts: [defaultPrompt],
             },
             ({ prompts }) => {
-                updatePrompts(prompts);
+                updatePrompts(prompts.map((prompt: promptObject) => ({...defaultPrompt, ...prompt})));
             }
         );
     }, [updatePrompts]);

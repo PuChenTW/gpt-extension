@@ -1,6 +1,6 @@
 import { MouseEvent } from "react";
 
-import { TranslateIcon, CheckIcon } from "./icons";
+import { TranslateIcon, CheckIcon } from "../utils/icons";
 
 interface buttonProps {
     children?: JSX.Element | string;
@@ -8,6 +8,7 @@ interface buttonProps {
     className?: string;
     icon?: string;
     bgcolor?: string;
+    color?: string;
     onMouseUp: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -16,6 +17,7 @@ function Button({
     className,
     onMouseUp,
     bgcolor,
+    color,
     hide = false,
 }: buttonProps) {
     const onMouseDown = (e: MouseEvent) => {
@@ -23,9 +25,10 @@ function Button({
         e.stopPropagation();
     };
 
-    const style: { display: string; backgroundColor: string } = {
+    const style: { display: string, backgroundColor: string, color : string } = {
         display: hide ? "none" : "flex",
         backgroundColor: bgcolor ?? "none",
+        color: color ?? "#000000",
     };
     const btnClassName = className ? `cs-button ${className}` : "cs-button";
 
@@ -53,12 +56,14 @@ export function ChatGptButton({
     onMouseUp,
     icon,
     bgcolor,
+    color,
     hide = false,
 }: buttonProps) {
     return (
         <Button
             onMouseUp={onMouseUp}
             bgcolor={bgcolor}
+            color={color}
             hide={hide}
         >
             {icon ?? <CheckIcon />}
