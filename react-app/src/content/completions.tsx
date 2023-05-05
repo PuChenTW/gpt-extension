@@ -17,12 +17,6 @@ export function useChatGptComplete() {
         );
     }, [setKey, setModel])
     
-    const statusMap = {
-        401: "The requesting API key is not correct. Please set the correct API key in options page.",
-        429: "The engine is currently overloaded. Retry your request later. If this issue persists, you might exceeded your current quota, please check your plan and billing details",
-        500: "Server error. Retry your request later.",
-    };
-
     return useCallback(async (text: string, callback: Function) => {
         try {
             const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -45,19 +39,20 @@ export function useChatGptComplete() {
                 }),
             });
     
-            if (!response.ok) {
-                callback(statusMap?.[response.status as keyof typeof statusMap] ?? "Something went wrong, please contact dev team.");
-                return
-            }
-    
             const reader = response?.body?.getReader();
             const decoder = new TextDecoder("utf-8");
-    
+
             while (reader) {
                 const { done, value } = await reader.read();
                 if (done) break;
-    
                 const data = decoder.decode(value);
+
+                if (!response.ok) {
+                    const { error } = JSON.parse(data);
+                    callback(error?.message ?? "Something went wrong, please contact dev team.");
+                    return
+                }
+    
                 const messages = data.split("data: ");
                 for (const message of messages) {
                     const parsed = message.trim();
