@@ -2,13 +2,18 @@ import { useState, useEffect, useCallback, ChangeEvent } from "react";
 
 const modelOptions = [
     { value: "gpt-4", label: "gpt-4" },
-    { value: "gpt-4-32k", label: "gpt-4-32k" },
+    { value: "gpt-4-0613", label: "gpt-4-0613" },
+    { value: "gpt-4-32k-0613", label: "gpt-4-32k-0613" },
     { value: "gpt-3.5-turbo", label: "gpt-3.5-turbo" },
-    { value: "gpt-3.5-turbo-0301", label: "gpt-3.5-turbo-0301" },
+    { value: "gpt-3.5-turbo-0613", label: "gpt-3.5-turbo-0613" },
+    { value: "gpt-3.5-turbo-16k", label: "gpt-3.5-turbo-16k" },
+    { value: "gpt-3.5-turbo-16k-0613", label: "gpt-3.5-turbo-16k-0613" },
 ];
 
+const defaultModel = "gpt-3.5-turbo"
+
 export function ModelInput() {
-    const [model, setModel] = useState("gpt-3.5-turbo");
+    const [model, setModel] = useState(defaultModel);
 
     const handleModelChange = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
         const newModel = event.target.value;
@@ -17,7 +22,7 @@ export function ModelInput() {
     }, []);
 
     useEffect(() => {
-        chrome.storage.local.get({ model: "gpt-3.5-turbo" }, ({ model }) => {
+        chrome.storage.local.get({ model: defaultModel }, ({ model }) => {
             setModel(model);
         });
     }, []);
