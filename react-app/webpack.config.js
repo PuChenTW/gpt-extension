@@ -2,6 +2,7 @@ const path = require("path");
 const tailwindcss = require('tailwindcss')
 const autoprefixer = require('autoprefixer')
 const TerserPlugin = require('terser-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   entry: {
@@ -65,4 +66,7 @@ module.exports = {
       }
     })],
   },
+  plugins: [
+    new BundleAnalyzerPlugin()
+  ]
 };

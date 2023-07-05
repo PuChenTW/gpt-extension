@@ -3,6 +3,7 @@ import { TabView, TabPanel } from "primereact/tabview";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 
+import { BlackList } from "./blacklist";
 import { PromptInput } from "./promptInput";
 import { KeyInput } from "./keyInput";
 import { ModelInput } from "./modelInput";
@@ -87,6 +88,8 @@ function App() {
                             <KeyInput />
                             <Label labelName="Model"></Label>
                             <ModelInput />
+                            <Label labelName="BlackList Domain"></Label>
+                            <BlackList />
                         </div>
                     </TabPanel>
                     {prompts.map((prompt, idx) => (
