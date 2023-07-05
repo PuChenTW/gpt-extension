@@ -88,7 +88,7 @@ function App() {
                             <KeyInput />
                             <Label labelName="Model"></Label>
                             <ModelInput />
-                            <Label labelName="BlackList"></Label>
+                            <Label labelName="BlackList Domain"></Label>
                             <BlackList />
                         </div>
                     </TabPanel>

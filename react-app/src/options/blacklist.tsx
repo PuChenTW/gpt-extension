@@ -14,7 +14,7 @@ function ItemTemplate(
 ) {
     return (
         <div className="cs-flex cs-flex-row cs-items-center cs-justify-between">
-            <div>{option.label}</div>
+            <div className="cs-break-all">{option.label}</div>
             <i className="pi pi-times-circle" onClick={() => onDelete(option)}></i>
         </div>
     );
@@ -35,13 +35,11 @@ export function BlackList() {
         },
         onSubmit: ({ value }) => {
             const matches = value.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
-            const domain = matches && matches[1];
-            if (domain) {
-                const update = [...blacklist, { label: domain, value: domain }];
-                chrome.storage.local.set({ blacklistDomain: update });
-                setBlacklist(update);
-                formik.resetForm();
-            }
+            const domain = matches && matches[1] || value;
+            const update = [...blacklist, { label: domain, value: domain }];
+            chrome.storage.local.set({ blacklistDomain: update });
+            setBlacklist(update);
+            formik.resetForm();
         },
     });
 
