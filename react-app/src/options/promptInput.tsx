@@ -7,9 +7,8 @@ import { ColorPicker, ColorPickerChangeEvent } from 'primereact/colorpicker';
 import {
     GrammarPrompt,
     SummaryPrompt,
-    AnalysisPrompt,
-    QuizPrompt,
-    promptObject
+    PromptConfig,
+    DefinitionPrompt,
 } from "../utils/promptsUtils";
 import { FillColorIcon, TextColorIcon } from "../utils/icons";
 
@@ -17,7 +16,7 @@ export function PromptInput({
     promptObj,
     onChange,
 }: {
-    promptObj: promptObject;
+    promptObj: PromptConfig;
     onChange: Function;
 }) {
     const [localPromptObj, setLocalPromptObj] = useImmer(promptObj)
@@ -146,21 +145,12 @@ export function PromptInput({
                 </button>
                 <button
                     id="grammer"
-                    className="cs-my-2 cs-mx-2 cs-bg-yellow-500 hover:cs-bg-yellow-700 cs-text-white cs-font-bold cs-py-2 cs-px-4 cs-rounded"
-                    onClick={() => {
-                        onPredefinedPrompt("Quiz", QuizPrompt);
-                    }}
-                >
-                    Quiz
-                </button>
-                <button
-                    id="grammer"
                     className="cs-my-2 cs-mx-2 cs-bg-red-500 hover:cs-bg-red-700 cs-text-white cs-font-bold cs-py-2 cs-px-4 cs-rounded"
                     onClick={() => {
-                        onPredefinedPrompt("Analysis", AnalysisPrompt);
+                        onPredefinedPrompt("Definition", DefinitionPrompt);
                     }}
                 >
-                    Analysis
+                    Definition
                 </button>
                 <div className="cs-absolute cs-right-0 cs-top-0 cs-my-2">
                     <Button

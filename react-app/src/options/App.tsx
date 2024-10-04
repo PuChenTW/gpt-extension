@@ -8,7 +8,7 @@ import { PromptInput } from "./promptInput";
 import { KeyInput } from "./keyInput";
 import { ModelInput } from "./modelInput";
 import { LanguageInput } from "./languageInput";
-import { usePrompts, promptObject } from "../utils/promptsUtils";
+import { usePrompts, PromptConfig } from "../utils/promptsUtils";
 
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -31,7 +31,7 @@ function App() {
     const toast = useRef<Toast>(null);
 
     const onChangePrompt = useCallback(
-        (prompt: promptObject, idx: number) => {
+        (prompt: PromptConfig, idx: number) => {
             updatePrompts((prompts) => {
                 prompts[idx] = prompt;
             });
@@ -103,7 +103,7 @@ function App() {
                         >
                             <PromptInput
                                 promptObj={prompt}
-                                onChange={(prompt: promptObject) => {
+                                onChange={(prompt: PromptConfig) => {
                                     onChangePrompt(prompt, idx);
                                 }}
                             />
