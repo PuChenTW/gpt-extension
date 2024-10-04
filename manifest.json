@@ -22,5 +22,6 @@
     "background": {
         "service_worker": "extension/background.js"
     },
-    "options_page": "extension/options.html"
+    "options_page": "extension/options.html",
+    "action": {}
 }
