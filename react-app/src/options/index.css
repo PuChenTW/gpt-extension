@@ -23,3 +23,11 @@
     align-items: center;
     font-size: 75%;
 }
+
+.rainbow-text {
+	color: #000;
+	background: linear-gradient(90deg, #AA00F5 10%, #2D00A8 18%, #248EFF 32%, #00C700 48%, #FAD900 68%, #FF8838 90%, #FF0000 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: #0000;
+	background-clip: text;
+}

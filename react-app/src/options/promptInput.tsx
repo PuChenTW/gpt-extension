@@ -1,16 +1,20 @@
-import { useCallback, ChangeEvent } from "react";
+import { useCallback, ChangeEvent, useState, useRef } from "react";
 import { useImmer } from "use-immer";
 import { Button } from "primereact/button";
 import { Fieldset } from "primereact/fieldset";
 import { InputText } from "primereact/inputtext";
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { Toast } from "primereact/toast";
 import { ColorPicker, ColorPickerChangeEvent } from 'primereact/colorpicker';
 import {
     GrammarPrompt,
     SummaryPrompt,
     PromptConfig,
     DefinitionPrompt,
+    generateIconAndColor,
 } from "../utils/promptsUtils";
 import { FillColorIcon, TextColorIcon } from "../utils/icons";
+
 
 export function PromptInput({
     promptObj,
@@ -19,7 +23,9 @@ export function PromptInput({
     promptObj: PromptConfig;
     onChange: Function;
 }) {
+    const toast = useRef<Toast>(null);
     const [localPromptObj, setLocalPromptObj] = useImmer(promptObj)
+    const [isGenerating, setIsGenerating] = useState(false);
     const onChangePrompt = useCallback(
         (e: ChangeEvent<HTMLTextAreaElement>) => {
             setLocalPromptObj(obj => {
@@ -79,8 +85,31 @@ export function PromptInput({
         onChange(localPromptObj);
     }, [localPromptObj]);
 
+    const onAutoGenerate = useCallback(async () => {
+        setIsGenerating(true);
+        try {
+            const { icon, bgcolor } = await generateIconAndColor(localPromptObj.prompt);
+            setLocalPromptObj(obj => {
+                obj.icon = icon;
+                obj.bgcolor = bgcolor;
+            });
+        } catch (error) {
+            console.error("Error generating icon and color:", error);
+            if (toast.current) {
+                toast.current.show({
+                    severity: "error",
+                    summary: "Error",
+                    detail: "Generate icon and color failed, try again later.",
+                });
+            }
+        } finally {
+            setIsGenerating(false);
+        }
+    }, [localPromptObj.prompt, setLocalPromptObj]);
+
     return (
         <div className="cs-flex cs-flex-col">
+            <Toast ref={toast} />
             <Fieldset legend="Title">
                 <div className="cs-flex cs-items-center cs-mb-2 cs-gap-2">
                     <InputText
@@ -104,7 +133,7 @@ export function PromptInput({
                     </p>
                 </div>
             </Fieldset>
-            <Fieldset className="cs-mt-2 cs-w-1/2" legend="Icon">
+            <Fieldset className="cs-mt-2 cs-w-1/2 cs-relative" legend="Icon">
                 <div className="cs-flex cs-flex-col cs-gap-2">
                     <div className="cs-flex cs-flex-row cs-gap-2 cs-items-center">
                         <FillColorIcon/>
@@ -121,6 +150,27 @@ export function PromptInput({
                     />
                     <div>Preview</div>
                     <button className="cs-button" style={{backgroundColor: localPromptObj.bgcolor, color: localPromptObj.color }}>{localPromptObj.icon}</button>
+                    <div className="cs-flex cs-justify-end">
+                        <Button
+                            className="p-button-rounded p-button-outlined p-button-info"
+                            icon="pi pi-bolt"
+                            onClick={onAutoGenerate}
+                            tooltip="Auto-generate icon and color"
+                            tooltipOptions={{ position: 'top' }}
+                        />
+                        {isGenerating && (
+                            <div className="cs-absolute cs-inset-0 cs-bg-gray-100 cs-bg-opacity-50 cs-flex cs-items-center cs-justify-center">
+                                <div className="cs-flex cs-flex-col cs-items-center">
+                                <ProgressSpinner
+                                    style={{width: '50px', height: '50px'}}
+                                    strokeWidth="4"
+                                    animationDuration=".5s"
+                                />
+                                <span className="rainbow-text">Summoning the perfect icon and colors...</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </Fieldset>
             </div>

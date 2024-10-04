@@ -1,74 +1,53 @@
 import { useCallback, useEffect, useState } from "react";
+import OpenAI from "openai";
 
 export function useChatGptComplete() {
-    const [key, setKey] = useState("")
-    const [model, setModel] = useState("gpt-3.5-turbo")
+    const [key, setKey] = useState("");
+    const [model, setModel] = useState("gpt-4o");
 
     useEffect(() => {
         chrome.storage.local.get(
             {
                 key: "",
-                model: "gpt-3.5-turbo",
+                model: "gpt-4o",
             },
             ({ key, model }) => {
                 setKey(key);
                 setModel(model);
             }
         );
-    }, [setKey, setModel])
+    }, []);
     
-    return useCallback(async (text: string, callback: Function) => {
+    return useCallback(async (text: string, callback: (content: string) => void) => {
+        if (!key) {
+            callback("API key is not set. Please set it in the extension options.");
+            return;
+        }
+
+        const openai = new OpenAI({ apiKey: key, dangerouslyAllowBrowser: true });
+
         try {
-            const response = await fetch("https://api.openai.com/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${key}`,
-                },
-                body: JSON.stringify({
-                    model,
-                    messages: [
-                        {
-                            role: "user",
-                            content: text,
-                        },
-                    ],
-                    max_tokens: text.length + 150,
-                    temperature: 0.2,
-                    stream: true,
-                }),
+            const stream = await openai.chat.completions.create({
+                model,
+                messages: [{ role: "user", content: text }],
+                max_tokens: text.length + 150,
+                temperature: 0.2,
+                stream: true,
             });
-    
-            const reader = response?.body?.getReader();
-            const decoder = new TextDecoder("utf-8");
 
-            while (reader) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                const data = decoder.decode(value);
-
-                if (!response.ok) {
-                    const { error } = JSON.parse(data);
-                    callback(error?.message ?? "Something went wrong, please contact dev team.");
-                    return
-                }
-    
-                const messages = data.split("data: ");
-                for (const message of messages) {
-                    const parsed = message.trim();
-                    if (parsed && parsed !== "[DONE]") {
-                        const { choices } = JSON.parse(parsed);
-                        for (const { delta } of choices) {
-                            if (delta?.content) {
-                                callback(delta.content);
-                            }
-                        }
-                    }
+            for await (const chunk of stream) {
+                const content = chunk.choices[0]?.delta?.content;
+                if (content) {
+                    callback(content);
                 }
             }
         } catch (error) {
             console.error(error);
-            callback("Something went wrong, please contact dev team.");
+            if (error instanceof OpenAI.APIError) {
+                callback(`OpenAI API error: ${error.message}`);
+            } else {
+                callback("Something went wrong, please contact the dev team.");
+            }
         }
-    }, [key, model])
+    }, [key, model]);
 }

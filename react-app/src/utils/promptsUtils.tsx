@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Updater, useImmer } from "use-immer";
+import OpenAI from 'openai';
 
 export const GrammarPrompt: string = `Check the grammar of the following:\n"""\n{{text}}\n"""\nReturn only the corrected sentence. Do not include explanations or reasons`;
 export const SummaryPrompt: string = `Summarize the following article:\n"""\n{{text}}\n"""`;
@@ -41,4 +42,26 @@ export function usePrompts(): [PromptConfig[], Updater<PromptConfig[]>] {
     }, [prompts]);
 
     return [prompts, updatePrompts];
+}
+
+export async function generateIconAndColor(prompt: string): Promise<{ icon: string; bgcolor: string }> {
+    const apiKey = await chrome.storage.local.get('key').then(result => result.key);
+    const openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
+
+    const chatCompletion = await openai.chat.completions.create({
+        model: "gpt-4",
+        messages: [
+            {
+                role: "system",
+                content: "You are a helpful assistant that generates appropriate icons and background colors for prompts.",
+            },
+            {
+                role: "user",
+                content: `Generate a single emoji icon and a background color (in hex format) that best represents the following prompt: "${prompt}". Respond in JSON format with "icon" and "bgcolor" keys.`,
+            },
+        ],
+    });
+
+    const result = JSON.parse(chatCompletion.choices[0].message.content || '{}');
+    return { icon: result.icon, bgcolor: result.bgcolor };
 }
