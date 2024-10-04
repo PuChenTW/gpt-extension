@@ -8,6 +8,7 @@ module.exports = {
   entry: {
     content: path.resolve('src/content/index.tsx'),
     options: path.resolve('src/options/index.tsx'),
+    side_panel: path.resolve('src/side_panel/index.tsx'),
   },
   mode: "production",
   module: {

@@ -17,10 +17,17 @@
     ],
     "permissions": [
         "storage",
-        "tabs"
+        "tabs",
+        "sidePanel"
     ],
     "background": {
         "service_worker": "extension/background.js"
     },
-    "options_page": "extension/options.html"
+    "options_page": "extension/options.html",
+    "side_panel": {
+        "default_path": "extension/side_panel.html"
+    },
+    "action": {
+        "default_title": "Click to open panel"
+    }
 }
