@@ -27,6 +27,28 @@ function LoadingSpin({ hide }: { hide: boolean }) {
 function ResultContainer({ children }: { children: string }) {
     const [tooltip, setTooltip] = useState("click to copy");
     const [showTooltip, setShowTooltip] = useState(false);
+    const [width, setWidth] = useState(() => {
+        const savedWidth = localStorage.getItem('resultContainerWidth');
+        return savedWidth ? `${savedWidth}px` : '24rem';
+    });
+
+    const onResize = useCallback(() => {
+        const container = document.getElementById('result-container');
+        if (container) {
+            const newWidth = container.offsetWidth;
+            localStorage.setItem('resultContainerWidth', newWidth.toString());
+            setWidth(`${newWidth}px`);
+        }
+    }, []);
+
+    useEffect(() => {
+        const container = document.getElementById('result-container');
+        if (container) {
+            const resizeObserver = new ResizeObserver(onResize);
+            resizeObserver.observe(container);
+            return () => resizeObserver.disconnect();
+        }
+    }, [onResize]);
 
     const onMouseOver = useCallback(() => {
         setTooltip("click to copy");
@@ -48,19 +70,23 @@ function ResultContainer({ children }: { children: string }) {
     );
 
     return (
-        <div
-            onMouseUp={onMouseUp}
-            onMouseOut={onMouseOut}
-            onMouseOver={onMouseOver}
-            id="result-container"
-        >
+        <div className="cs-flex cs-flex-col">
+            <div
+                onMouseUp={onMouseUp}
+                onMouseOut={onMouseOut}
+                onMouseOver={onMouseOver}
+                id="result-container"
+                className="cs-resizable"
+                style={{width}}
+            >
+                <div className="cs-flex"> {children} </div>
+            </div>
             <span
                 style={{ visibility: showTooltip ? "visible" : "hidden" }}
                 className="cs-tooltiptext"
             >
                 {tooltip}
             </span>
-            <div className="cs-flex"> {children} </div>
         </div>
     );
 }
@@ -73,7 +99,7 @@ export function PopupDialog({
 }: dialogProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [result, setResult] = useState("");
-    const [hideButtons, setHideButtons] = useState(false);
+    const [showingResult, setShowingResult] = useState(false);
     const [loading, setLoading] = useState(false);
     const [position, setPosition] = useState({ top, left });
     const chatGptComplete = useChatGptComplete()
@@ -100,14 +126,14 @@ export function PopupDialog({
         event.preventDefault();
         event.stopPropagation();
         setLoading(true);
-        setHideButtons(true);
+        setShowingResult(true);
         moveDialogBySelectionRect();
         const apiCallback = (text: string) => {
             setLoading(false);
             setResult((previousResult) => previousResult + text);
         };
         return apiCallback
-    }, [setLoading, setResult, setHideButtons, moveDialogBySelectionRect])
+    }, [setLoading, setResult, setShowingResult, moveDialogBySelectionRect])
 
     const onGoogleTranslate = useCallback((event: MouseEvent<HTMLButtonElement>) => {
         const callback = onButtonClick(event)
@@ -128,7 +154,7 @@ export function PopupDialog({
         <div id="gpt-ex-dialog" ref={containerRef} style={{ ...position }}>
             <TranslateButton
                 onMouseUp={onGoogleTranslate}
-                hide={hideButtons}
+                hide={showingResult}
             />
             {prompts.map(({prompt, icon, bgcolor, color}, idx) => (
                 <ChatGptButton
@@ -137,11 +163,11 @@ export function PopupDialog({
                     color={color}
                     key={idx}
                     onMouseUp={(e) => {onChatGpt(e, prompt)}}
-                    hide={hideButtons}
+                    hide={showingResult}
                 />
             ))}
             <LoadingSpin hide={!loading} />
-            <ResultContainer>{result}</ResultContainer>
+            {showingResult && <ResultContainer>{result}</ResultContainer>}
         </div>
     );
 }

@@ -2,7 +2,6 @@
 @tailwind utilities;
 #gpt-ex-dialog {
     padding: 4px;
-    max-width: 24rem;
     --tw-bg-opacity: 1;
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));
     border-radius: 0.25rem;
@@ -64,4 +63,13 @@
     justify-content: center;
     align-items: center;
     font-size: 75%;
+}
+
+.cs-resizable {
+    position: relative;
+    overflow: hidden;   /* Hide both vertical and horizontal scrollbars */
+    resize: both; /* Only allow horizontal resizing */
+    min-width: 10px;
+    max-width: 100%;    /* Prevent expanding beyond the parent width */
+    min-height: 33px;
 }
