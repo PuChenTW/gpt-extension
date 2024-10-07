@@ -1,4 +1,4 @@
-import { useState, useCallback, MouseEvent, useEffect, useRef, useMemo } from "react";
+import { useState, useCallback, MouseEvent, useEffect, useRef } from "react";
 import { ProgressSpin } from "../utils/icons";
 import { ChatGptButton, TranslateButton } from "./Button";
 import { useGoogleTranslate } from "./translate";
@@ -105,7 +105,7 @@ function ResultContainer({ children }: { children: string }) {
                 onMouseOver={onMouseOver}
                 id="result-container"
                 className={containerClass}
-                style={{width}}
+                style={{ width }}
             >
                 <div className="cs-flex cs-p-2"> {children} </div>
             </div>
@@ -133,6 +133,7 @@ export function PopupDialog({
     const chatGptComplete = useChatGptComplete()
     const googleTranslate = useGoogleTranslate()
     const [prompts] = usePrompts()
+    const [hideTranslate, setHideTranslate] = useState(false);
 
     const moveDialogBySelectionRect = useCallback(() => {
         if (selection && selection.rangeCount > 0) {
@@ -178,19 +179,27 @@ export function PopupDialog({
         if (result) moveDialogBySelectionRect();
     }, [result]);
 
+    useEffect(() => {
+        chrome.storage.local.get(
+            {
+                hideTranslate: false,
+            },
+            ({ hideTranslate }) => {
+                setHideTranslate(hideTranslate);
+            },
+        );
+    }, []);
+
     return (
         <div id="gpt-ex-dialog" ref={containerRef} style={{ ...position }}>
-            <TranslateButton
-                onMouseUp={onGoogleTranslate}
-                hide={showingResult}
-            />
-            {prompts.map(({prompt, icon, bgcolor, color}, idx) => (
+            {!hideTranslate && <TranslateButton onMouseUp={onGoogleTranslate} hide={showingResult}/>}
+            {prompts.map(({ prompt, icon, bgcolor, color }, idx) => (
                 <ChatGptButton
                     icon={icon}
                     bgcolor={bgcolor}
                     color={color}
                     key={idx}
-                    onMouseUp={(e) => {onChatGpt(e, prompt)}}
+                    onMouseUp={(e) => { onChatGpt(e, prompt) }}
                     hide={showingResult}
                 />
             ))}
