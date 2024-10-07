@@ -1,4 +1,4 @@
-import { useState, useCallback, MouseEvent, useEffect, useRef } from "react";
+import { useState, useCallback, MouseEvent, useEffect, useRef, useMemo } from "react";
 import { ProgressSpin } from "../utils/icons";
 import { ChatGptButton, TranslateButton } from "./Button";
 import { useGoogleTranslate } from "./translate";
@@ -27,6 +27,7 @@ function LoadingSpin({ hide }: { hide: boolean }) {
 function ResultContainer({ children }: { children: string }) {
     const [tooltip, setTooltip] = useState("click to copy");
     const [showTooltip, setShowTooltip] = useState(false);
+    const [fontClass, setfontClass] = useState("cs-resizable cs-text-sm");
     const [width, setWidth] = useState(() => {
         const savedWidth = localStorage.getItem('resultContainerWidth');
         return savedWidth ? `${savedWidth}px` : '24rem';
@@ -69,6 +70,33 @@ function ResultContainer({ children }: { children: string }) {
         [children, setTooltip]
     );
 
+    useEffect(() => {
+        chrome.storage.local.get(
+            {
+                fontSize: "medium",
+            },
+            ({ fontSize }) => {
+                switch (fontSize) {
+                    case "small":
+                        setfontClass("cs-text-xs");
+                        break;
+                    case "medium":
+                        setfontClass("cs-text-sm");
+                        break;
+                    case "large":
+                        setfontClass("cs-text-lg");
+                        break;
+                    default:
+                        setfontClass("cs-text-sm");
+                        break;
+                }
+            }
+        );
+
+    }, [setfontClass])
+
+    const containerClass = `cs-resizable ${fontClass}`;
+
     return (
         <div className="cs-flex cs-flex-col">
             <div
@@ -76,10 +104,10 @@ function ResultContainer({ children }: { children: string }) {
                 onMouseOut={onMouseOut}
                 onMouseOver={onMouseOver}
                 id="result-container"
-                className="cs-resizable"
+                className={containerClass}
                 style={{width}}
             >
-                <div className="cs-flex"> {children} </div>
+                <div className="cs-flex cs-p-2"> {children} </div>
             </div>
             <span
                 style={{ visibility: showTooltip ? "visible" : "hidden" }}

@@ -8,6 +8,7 @@ import { PromptInput } from "./promptInput";
 import { KeyInput } from "./keyInput";
 import { ModelInput } from "./modelInput";
 import { LanguageInput } from "./languageInput";
+import { FontSizeInput } from './fontInput'
 import { usePrompts, PromptConfig } from "../utils/promptsUtils";
 
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -82,6 +83,8 @@ function App() {
                         closeIcon={undefined}
                     >
                         <div className="cs-grid cs-grid-cols-2 cs-items-center cs-gap-4">
+                            <Label labelName="Font Size"></Label>
+                            <FontSizeInput />
                             <Label labelName="Primary Language (Google translate)"></Label>
                             <LanguageInput />
                             <Label labelName="Your ChatGPT API Key"></Label>
