@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect, useCallback, ChangeEvent } from "react";
 
 const languageOptions = [
@@ -135,7 +136,7 @@ const languageOptions = [
     { value: "yi", label: "Yiddish" },
     { value: "yo", label: "Yoruba" },
     { value: "zu", label: "Zulu" },
-]
+];
 
 export function LanguageInput() {
     const [language, setLanguage] = useState("en");
@@ -145,7 +146,7 @@ export function LanguageInput() {
             setLanguage(e.target.value);
             chrome.storage.local.set({ language: e.target.value });
         },
-        [setLanguage]
+        [setLanguage],
     );
 
     useEffect(() => {
@@ -155,7 +156,7 @@ export function LanguageInput() {
             },
             ({ language }) => {
                 setLanguage(language);
-            }
+            },
         );
     }, [setLanguage]);
 

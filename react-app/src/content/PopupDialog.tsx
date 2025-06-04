@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useCallback, MouseEvent, useEffect, useRef } from "react";
 import { ProgressSpin } from "../utils/icons";
 import { ChatGptButton, TranslateButton } from "./Button";
@@ -29,21 +30,21 @@ function ResultContainer({ children }: { children: string }) {
     const [showTooltip, setShowTooltip] = useState(false);
     const [fontClass, setfontClass] = useState("cs-resizable cs-text-sm");
     const [width, setWidth] = useState(() => {
-        const savedWidth = localStorage.getItem('resultContainerWidth');
-        return savedWidth ? `${savedWidth}px` : '24rem';
+        const savedWidth = localStorage.getItem("resultContainerWidth");
+        return savedWidth ? `${savedWidth}px` : "24rem";
     });
 
     const onResize = useCallback(() => {
-        const container = document.getElementById('result-container');
+        const container = document.getElementById("result-container");
         if (container) {
             const newWidth = container.offsetWidth;
-            localStorage.setItem('resultContainerWidth', newWidth.toString());
+            localStorage.setItem("resultContainerWidth", newWidth.toString());
             setWidth(`${newWidth}px`);
         }
     }, []);
 
     useEffect(() => {
-        const container = document.getElementById('result-container');
+        const container = document.getElementById("result-container");
         if (container) {
             const resizeObserver = new ResizeObserver(onResize);
             resizeObserver.observe(container);
@@ -67,7 +68,7 @@ function ResultContainer({ children }: { children: string }) {
             navigator.clipboard.writeText(children);
             setTooltip("copied");
         },
-        [children, setTooltip]
+        [children, setTooltip],
     );
 
     useEffect(() => {
@@ -90,10 +91,9 @@ function ResultContainer({ children }: { children: string }) {
                         setfontClass("cs-text-sm");
                         break;
                 }
-            }
+            },
         );
-
-    }, [setfontClass])
+    }, [setfontClass]);
 
     const containerClass = `cs-resizable ${fontClass}`;
 
@@ -130,9 +130,9 @@ export function PopupDialog({
     const [showingResult, setShowingResult] = useState(false);
     const [loading, setLoading] = useState(false);
     const [position, setPosition] = useState({ top, left });
-    const chatGptComplete = useChatGptComplete()
-    const googleTranslate = useGoogleTranslate()
-    const [prompts] = usePrompts()
+    const chatGptComplete = useChatGptComplete();
+    const googleTranslate = useGoogleTranslate();
+    const [prompts] = usePrompts();
     const [hideTranslate, setHideTranslate] = useState(false);
 
     const moveDialogBySelectionRect = useCallback(() => {
@@ -151,33 +151,42 @@ export function PopupDialog({
         }
     }, [setPosition, containerRef, selection]);
 
-    const onButtonClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        event.stopPropagation();
-        setLoading(true);
-        setShowingResult(true);
-        moveDialogBySelectionRect();
-        const apiCallback = (text: string) => {
-            setLoading(false);
-            setResult((previousResult) => previousResult + text);
-        };
-        return apiCallback
-    }, [setLoading, setResult, setShowingResult, moveDialogBySelectionRect])
+    const onButtonClick = useCallback(
+        (event: MouseEvent<HTMLButtonElement>) => {
+            event.preventDefault();
+            event.stopPropagation();
+            setLoading(true);
+            setShowingResult(true);
+            moveDialogBySelectionRect();
+            const apiCallback = (text: string) => {
+                setLoading(false);
+                setResult((previousResult) => previousResult + text);
+            };
+            return apiCallback;
+        },
+        [setLoading, setResult, setShowingResult, moveDialogBySelectionRect],
+    );
 
-    const onGoogleTranslate = useCallback((event: MouseEvent<HTMLButtonElement>) => {
-        const callback = onButtonClick(event)
-        googleTranslate(selectedText, callback);
-    }, [googleTranslate, selectedText, onButtonClick])
+    const onGoogleTranslate = useCallback(
+        (event: MouseEvent<HTMLButtonElement>) => {
+            const callback = onButtonClick(event);
+            googleTranslate(selectedText, callback);
+        },
+        [googleTranslate, selectedText, onButtonClick],
+    );
 
-    const onChatGpt = useCallback((event: MouseEvent<HTMLButtonElement>, prompt: string) => {
-        const callback = onButtonClick(event)
-        const text = prompt.replace("{{text}}", selectedText)
-        chatGptComplete(text, callback);
-    }, [chatGptComplete, selectedText, onButtonClick])
+    const onChatGpt = useCallback(
+        (event: MouseEvent<HTMLButtonElement>, prompt: string) => {
+            const callback = onButtonClick(event);
+            const text = prompt.replace("{{text}}", selectedText);
+            chatGptComplete(text, callback);
+        },
+        [chatGptComplete, selectedText, onButtonClick],
+    );
 
     useEffect(() => {
         if (result) moveDialogBySelectionRect();
-    }, [result]);
+    }, [result, moveDialogBySelectionRect]);
 
     useEffect(() => {
         chrome.storage.local.get(
@@ -192,14 +201,18 @@ export function PopupDialog({
 
     return (
         <div id="gpt-ex-dialog" ref={containerRef} style={{ ...position }}>
-            {!hideTranslate && <TranslateButton onMouseUp={onGoogleTranslate} hide={showingResult}/>}
+            {!hideTranslate && (
+                <TranslateButton onMouseUp={onGoogleTranslate} hide={showingResult} />
+            )}
             {prompts.map(({ prompt, icon, bgcolor, color }, idx) => (
                 <ChatGptButton
                     icon={icon}
                     bgcolor={bgcolor}
                     color={color}
                     key={idx}
-                    onMouseUp={(e) => { onChatGpt(e, prompt) }}
+                    onMouseUp={(e) => {
+                        onChatGpt(e, prompt);
+                    }}
                     hide={showingResult}
                 />
             ))}

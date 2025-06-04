@@ -7,7 +7,7 @@ export function KeyInput() {
             setKey(e.target.value);
             chrome.storage.local.set({ key: e.target.value });
         },
-        [setKey]
+        [setKey],
     );
     useEffect(() => {
         chrome.storage.local.get(
@@ -16,7 +16,7 @@ export function KeyInput() {
             },
             ({ key }) => {
                 setKey(key);
-            }
+            },
         );
     }, [setKey]);
     return (

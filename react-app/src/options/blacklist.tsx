@@ -1,3 +1,4 @@
+import React from "react";
 import { useFormik } from "formik";
 import { ListBox } from "primereact/listbox";
 import { useCallback, useEffect } from "react";
@@ -8,10 +9,7 @@ interface blacklistitem {
     value: string;
 }
 
-function ItemTemplate(
-    option: blacklistitem,
-    onDelete: (option: blacklistitem) => void
-) {
+function ItemTemplate(option: blacklistitem, onDelete: (option: blacklistitem) => void) {
     return (
         <div className="cs-flex cs-flex-row cs-items-center cs-justify-between">
             <div className="cs-break-all">{option.label}</div>
@@ -34,8 +32,8 @@ export function BlackList() {
             value: "",
         },
         onSubmit: ({ value }) => {
-            const matches = value.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
-            const domain = matches && matches[1] || value;
+            const matches = value.match(/^https?:\/\/(?<domain>[^/?#]+)(?:[/?#]|$)/i);
+            const domain = (matches && matches[1]) || value;
             const update = [...blacklist, { label: domain, value: domain }];
             chrome.storage.local.set({ blacklistDomain: update });
             setBlacklist(update);
@@ -46,14 +44,12 @@ export function BlackList() {
     const onDelete = useCallback(
         (option: blacklistitem) => {
             setBlacklist((blacklist) => {
-                const newBlacklist = blacklist.filter(
-                    (item) => item.value !== option.value
-                );
+                const newBlacklist = blacklist.filter((item) => item.value !== option.value);
                 chrome.storage.local.set({ blacklistDomain: newBlacklist });
                 return newBlacklist;
             });
         },
-        [setBlacklist]
+        [setBlacklist],
     );
 
     return (

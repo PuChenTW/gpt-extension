@@ -1,3 +1,5 @@
+import React from "react";
+
 import { MouseEvent } from "react";
 
 import { TranslateIcon, CheckIcon } from "../utils/icons";
@@ -12,20 +14,13 @@ interface buttonProps {
     onMouseUp: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
-function Button({
-    children,
-    className,
-    onMouseUp,
-    bgcolor,
-    color,
-    hide = false,
-}: buttonProps) {
+function Button({ children, className, onMouseUp, bgcolor, color, hide = false }: buttonProps) {
     const onMouseDown = (e: MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
     };
 
-    const style: { display: string, backgroundColor: string, color : string } = {
+    const style: { display: string; backgroundColor: string; color: string } = {
         display: hide ? "none" : "flex",
         backgroundColor: bgcolor ?? "none",
         color: color ?? "#000000",
@@ -52,20 +47,9 @@ export function TranslateButton({ onMouseUp, hide = false }: buttonProps) {
     );
 }
 
-export function ChatGptButton({
-    onMouseUp,
-    icon,
-    bgcolor,
-    color,
-    hide = false,
-}: buttonProps) {
+export function ChatGptButton({ onMouseUp, icon, bgcolor, color, hide = false }: buttonProps) {
     return (
-        <Button
-            onMouseUp={onMouseUp}
-            bgcolor={bgcolor}
-            color={color}
-            hide={hide}
-        >
+        <Button onMouseUp={onMouseUp} bgcolor={bgcolor} color={color} hide={hide}>
             {icon ?? <CheckIcon />}
         </Button>
     );

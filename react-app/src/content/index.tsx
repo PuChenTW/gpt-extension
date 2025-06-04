@@ -17,20 +17,14 @@ chrome.storage.local.get(
     },
     ({ blacklistDomain }) => {
         blacklist = blacklistDomain.map(({ value }: { value: string }) => value);
-    }
+    },
 );
 
 document.addEventListener("mouseup", (e) => {
     const selection = window.getSelection();
     const text = selection?.toString()?.trim();
     const domain = window.location.hostname;
-    if (
-        !showing &&
-        selection &&
-        text &&
-        text.length > 0 &&
-        !blacklist.includes(domain)
-    ) {
+    if (!showing && selection && text && text.length > 0 && !blacklist.includes(domain)) {
         const dialogTop = `${e.clientY + window.scrollY + 5}px`;
         const dialogLeft = `${e.clientX + window.scrollX}px`;
         showing = true;
@@ -42,7 +36,7 @@ document.addEventListener("mouseup", (e) => {
                     selectedText={text}
                     selection={selection}
                 />
-            </React.StrictMode>
+            </React.StrictMode>,
         );
     } else {
         root.render(<React.StrictMode></React.StrictMode>);

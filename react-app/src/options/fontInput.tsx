@@ -8,7 +8,7 @@ export function FontSizeInput() {
             setFontSize(e.target.value);
             chrome.storage.local.set({ fontSize: e.target.value });
         },
-        [setFontSize]
+        [setFontSize],
     );
 
     useEffect(() => {
@@ -18,7 +18,7 @@ export function FontSizeInput() {
             },
             ({ fontSize }) => {
                 setFontSize(fontSize);
-            }
+            },
         );
     }, [setFontSize]);
 

@@ -7,7 +7,7 @@ const modelOptions = [
     { value: "gpt-4-32k-0613", label: "gpt-4-32k-0613" },
 ];
 
-const defaultModel = "gpt-3.5-turbo"
+const defaultModel = "gpt-3.5-turbo";
 
 export function ModelInput() {
     const [model, setModel] = useState(defaultModel);
