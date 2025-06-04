@@ -16,13 +16,14 @@ To install the extension, follow these steps:
 
 2. Unzip the package to a local directory.
 
-3. Open Google Chrome and navigate to the "Extensions" page by entering "chrome://extensions/" in the address bar.
+3. Run `npm install` inside the `react-app` directory to install the Node dependencies.
+4. Open Google Chrome and navigate to the "Extensions" page by entering "chrome://extensions/" in the address bar.
 
-4. Enable "Developer mode" in the top right corner.
+5. Enable "Developer mode" in the top right corner.
 
-5. Click "Load unpacked" button in the top left corner.
+6. Click "Load unpacked" button in the top left corner.
 
-6. Select the unzipped directory of the extension.
+7. Select the unzipped directory of the extension.
 
 The extension should now be installed and ready to use.
 
