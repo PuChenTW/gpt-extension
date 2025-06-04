@@ -16,7 +16,7 @@ export interface PromptConfig {
 }
 
 const defaultPrompt: PromptConfig = {
-    header: "Grammer",
+    header: "Grammar",
     prompt: GrammarPrompt,
     icon: "🔍",
     bgcolor: "#84CC16",

@@ -176,16 +176,16 @@ export function PromptInput({
             </div>
             <div className="cs-relative">
                 <button
-                    id="grammer"
+                    id="grammar"
                     className="cs-my-2 cs-mr-2 cs-bg-blue-500 hover:cs-bg-blue-700 cs-text-white cs-font-bold cs-py-2 cs-px-4 cs-rounded"
                     onClick={() => {
-                        onPredefinedPrompt("Grammer", GrammarPrompt);
+                        onPredefinedPrompt("grammar", GrammarPrompt);
                     }}
                 >
                     Grammar
                 </button>
                 <button
-                    id="grammer"
+                    id="grammar"
                     className="cs-my-2 cs-mx-2 cs-bg-green-500 hover:cs-bg-green-700 cs-text-white cs-font-bold cs-py-2 cs-px-4 cs-rounded"
                     onClick={() => {
                         onPredefinedPrompt("Summary", SummaryPrompt);
@@ -194,7 +194,7 @@ export function PromptInput({
                     Summary
                 </button>
                 <button
-                    id="grammer"
+                    id="grammar"
                     className="cs-my-2 cs-mx-2 cs-bg-red-500 hover:cs-bg-red-700 cs-text-white cs-font-bold cs-py-2 cs-px-4 cs-rounded"
                     onClick={() => {
                         onPredefinedPrompt("Definition", DefinitionPrompt);
