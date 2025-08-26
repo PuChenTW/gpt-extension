@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, ChangeEvent } from "react";
 
-export function KeyInput() {
+export function KeyInput({ type = 'text' }: { type?: string }) {
     const [key, setKey] = useState("");
     const onChangeKey = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +21,7 @@ export function KeyInput() {
     }, [setKey]);
     return (
         <input
-            type="text"
+            type={type}
             id="key"
             className="cs-block cs-rounded-md cs-border-0 cs-py-1.5 cs-pl-7 cs-pr-7 cs-text-gray-900 cs-ring-1 cs-ring-inset cs-ring-gray-300 placeholder:cs-text-gray-400 focus:cs-ring-2 focus:cs-ring-inset focus:cs-ring-indigo-600 sm:cs-text-sm sm:cs-leading-6"
             value={key}

@@ -91,7 +91,7 @@ function App() {
                             <Label labelName="Primary Language (Google translate)"></Label>
                             <LanguageInput />
                             <Label labelName="Your ChatGPT API Key"></Label>
-                            <KeyInput />
+                            <KeyInput type="password" />
                             <Label labelName="Model"></Label>
                             <ModelInput />
                             <Label labelName="BlackList Domain"></Label>
